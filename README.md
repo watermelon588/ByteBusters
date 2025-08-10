@@ -2,6 +2,8 @@
 Collaborative Digital Ecosystem for Inclusive Health and Well-Being 
 
 
+Flowchart: Collaborator GitHub Workflow
+
            ┌────────────────────────┐
            │   Original Repository   │
            │ (Upstream on GitHub)    │
