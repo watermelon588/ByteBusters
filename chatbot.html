@@ -35,7 +35,7 @@
   <a class="sos-btn" href="#" id="sosBtnChat" title="Emergency SOS">SOS</a>
 
   <script src="script.js"></script>
-  <script>
+  <!-- <script>
     const chatMessages = document.getElementById('chatMessages');
     const chatInput = document.getElementById('chatInput');
     const sendBtn = document.getElementById('sendBtn');
@@ -66,6 +66,67 @@
     });
 
     chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendBtn.click(); });
-  </script>
+  </script> -->
+  <script>
+    const chatMessages = document.getElementById('chatMessages');
+    const chatInput = document.getElementById('chatInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // ==== SET YOUR API KEY HERE ====
+    // Option 1: Directly here (not safe for production)
+    // const OPENAI_API_KEY = "YOUR_OPENAI_API_KEY";
+
+    // Option 2 (Better): Pass via command line or environment variable
+    // In terminal:
+    //   export OPENAI_API_KEY="your_api_key_here"
+    //   Then run your server and read process.env.OPENAI_API_KEY in backend
+
+    async function pushMessage(text, role = 'user') {
+        const el = document.createElement('div');
+        el.className = 'message ' + (role === 'user' ? 'user' : 'bot');
+        el.textContent = text;
+        chatMessages.appendChild(el);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function getGPTReply(userMessage) {
+        try {
+            const res = await fetch("https://api.openai.com/v1/chat/completions", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${OPENAI_API_KEY}` // <== API key used here
+                },
+                body: JSON.stringify({
+                    model: "gpt-3.5-turbo",
+                    messages: [{ role: "user", content: userMessage }],
+                    max_tokens: 150
+                })
+            });
+
+            const data = await res.json();
+            return data.choices?.[0]?.message?.content || "⚠️ No response from GPT.";
+        } catch (error) {
+            console.error(error);
+            return "⚠️ Error connecting to chatbot API.";
+        }
+    }
+
+    sendBtn.addEventListener('click', async () => {
+        const v = chatInput.value.trim();
+        if (!v) return;
+        await pushMessage(v, 'user');
+        chatInput.value = '';
+
+        // GPT Reply
+        const reply = await getGPTReply(v);
+        await pushMessage(reply, 'bot');
+    });
+
+    chatInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') sendBtn.click();
+    });
+</script>
+
 </body>
 </html>
