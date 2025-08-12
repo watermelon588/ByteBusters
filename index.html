@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>HealthCare — Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Auth Modal (signup/login) -->
+  <div id="authModal" class="auth-modal">
+    <div class="auth-card">
+      <div class="auth-left">
+        <h2 id="authTitle">Create Account</h2>
+        <p class="muted">Quick sign up to save preferences and use the period tracker.</p>
+        <form id="authForm" class="auth-form">
+          <label class="label">Full name
+            <input id="name" type="text" placeholder="Asha Kumar" required />
+          </label>
+          <label class="label">Email
+            <input id="email" type="email" placeholder="you@example.com" required />
+          </label>
+          <label class="label">Password
+            <input id="password" type="password" placeholder="At least 8 characters" required />
+          </label>
+          <label class="label">Gender
+            <select id="gender" required>
+              <option value="">Select</option>
+              <option value="female">Female</option>
+              <option value="male">Male</option>
+              <option value="other">Other</option>
+            </select>
+          </label>
+
+          <div class="auth-actions">
+            <button type="button" class="btn btn-outline" onclick="switchToLogin()">Login</button>
+            <button id="submitBtn" type="submit" class="btn">Create Account</button>
+          </div>
+          <div class="small muted" style="text-align:center;margin-top:8px">
+            By continuing you agree to our <a href="#" class="link">Terms</a>.
+          </div>
+        </form>
+      </div>
+
+      <div class="auth-right">
+        <div class="brand">
+          <div class="logo">💚</div>
+          <h3>HealthCare</h3>
+          <p class="muted">Your personal health companion</p>
+        </div>
+        <div class="auth-illustration">
+          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='180'><rect width='100%' height='100%' fill='%23e9fbfa'/><g fill='%23566f6c'><circle cx='60' cy='60' r='20'/><rect x='100' y='40' width='120' height='60' rx='12'/></g></svg>" alt="ill" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dashboard -->
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div>
+        <h1 class="title">JeevaCare</h1>
+        <div class="subtitle muted">Community health, teleconsultations & trackers</div>
+      </div>
+      <div class="user-actions">
+        <button id="openFeedback" class="btn btn-ghost">Feedback</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container main">
+    <section class="panel welcome">
+      <div>
+        <h2>Welcome to your health dashboard</h2>
+        <p class="muted">Tap a card to open a feature. The SOS button is always available at bottom-right.</p>
+      </div>
+      <div class="profile">
+        <div id="userInfo" class="profile-name muted">Not signed in</div>
+      </div>
+    </section>
+
+    <section class="card-grid">
+      <a class="feature-card" href="chatbot.html">
+        <div class="icon">🤖</div>
+        <h3>AI Health Assistant</h3>
+        <p class="muted">Describe symptoms and get instant guidance.</p>
+        <div class="cta">Open</div>
+      </a>
+
+      <a class="feature-card" href="hospital.html">
+        <div class="icon">🏥</div>
+        <h3>Nearest Hospitals</h3>
+        <p class="muted">Find hospitals around you (Maps).</p>
+        <div class="cta">Locate</div>
+      </a>
+
+      <a class="feature-card" href="awareness.html">
+        <div class="icon">📚</div>
+        <h3>Health Awareness</h3>
+        <p class="muted">Guides & tips for wellbeing.</p>
+        <div class="cta">Explore</div>
+      </a>
+
+      <a class="feature-card" href="period.html" id="periodCard">
+        <div class="icon">📅</div>
+        <h3>Period Tracker</h3>
+        <p class="muted">Track cycles & fertile window.</p>
+        <div class="cta">Track</div>
+      </a>
+
+      <a class="feature-card" href="feedback.html">
+        <div class="icon">✉️</div>
+        <h3>Feedback</h3>
+        <p class="muted">Share your experience.</p>
+        <div class="cta">Send</div>
+      </a>
+    </section>
+  </main>
+
+  <!-- SOS -->
+  <a class="sos-btn" href="#" id="sosBtn" title="Emergency SOS">SOS</a>
+
+  <script src="script.js"></script>
+  <script>
+    // Auth form handling (simple demo)
+    let isLoginMode = false;
+    function switchToLogin(){
+      isLoginMode = true;
+      document.getElementById('authTitle').textContent = 'Login';
+      document.getElementById('submitBtn').textContent = 'Login';
+      document.querySelector('#gender').parentElement.style.display = 'none';
+      document.getElementById('name').required = false;
+    }
+    document.getElementById('authForm').addEventListener('submit', function(e){
+      e.preventDefault();
+      const name = document.getElementById('name').value || 'User';
+      const email = document.getElementById('email').value;
+      const gender = document.getElementById('gender').value || 'not specified';
+      // store demo user
+      const user = { name, email, gender };
+      localStorage.setItem('hc_user', JSON.stringify(user));
+      document.getElementById('authModal').style.display = 'none';
+      document.getElementById('userInfo').textContent = `Welcome, ${name}`;
+      // show period card only for female
+      if (gender === 'female') document.getElementById('periodCard').style.display = 'block';
+    });
+
+    // Show signup modal by default
+    document.addEventListener('DOMContentLoaded', () => {
+      const stored = localStorage.getItem('hc_user');
+      if (stored){
+        const u = JSON.parse(stored);
+        document.getElementById('userInfo').textContent = `Welcome, ${u.name}`;
+        document.getElementById('authModal').style.display = 'none';
+        if (u.gender === 'female') document.getElementById('periodCard').style.display = 'block';
+      } else {
+        document.getElementById('authModal').style.display = 'flex';
+      }
+    });
+
+    // feedback quick open
+    document.getElementById('openFeedback').addEventListener('click', () => {
+      window.location.href = 'feedback.html';
+    });
+  </script>
+</body>
+</html>

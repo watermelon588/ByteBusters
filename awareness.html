@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Health Awareness</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div><h2 class="title">Health Awareness</h2><div class="muted">Practical tips for wellbeing</div></div>
+      <div><a class="btn btn-ghost" href="index.html">← Dashboard</a></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel tips-grid" id="tipsGrid"></section>
+  </main>
+
+  <a class="sos-btn" href="#" id="sosBtnAware" title="Emergency SOS">SOS</a>
+
+  <script src="script.js"></script>
+  <script>
+    const tips = [
+      { title:'Balanced Diet', body:'Eat a variety of fruits, vegetables, whole grains and lean proteins.' },
+      { title:'Physical Activity', body:'Aim for 30 minutes of moderate activity most days.' },
+      { title:'Sleep', body:'7–9 hours of sleep helps recovery and mental health.' },
+      { title:'Hydration', body:'Drink water regularly — needs vary by person and climate.' },
+      { title:'Mental Health', body:'Practice mindfulness; talk to someone if feeling low.' },
+      { title:'Vaccination', body:'Follow national schedules and keep records updated.' }
+    ];
+    const grid = document.getElementById('tipsGrid');
+    tips.forEach(t => {
+      const el = document.createElement('article');
+      el.className = 'tip-card';
+      el.innerHTML = `<h3>${t.title}</h3><p class="muted">${t.body}</p>`;
+      grid.appendChild(el);
+    });
+  </script>
+</body>
+</html>

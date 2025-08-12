@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Feedback</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div><h2 class="title">Feedback</h2><div class="muted">Help us improve</div></div>
+      <div><a class="btn btn-ghost" href="index.html">← Dashboard</a></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <form id="feedbackForm">
+        <label class="label">Rating
+          <select id="rating" required>
+            <option value="">--</option>
+            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
+          </select>
+        </label>
+        <label class="label">Comments
+          <textarea id="comments" rows="5" placeholder="Share suggestions..."></textarea>
+        </label>
+        <div style="margin-top:12px;">
+          <button class="btn" type="submit">Submit</button>
+          <button id="viewBtn" class="btn btn-outline" type="button">View saved</button>
+        </div>
+      </form>
+    </section>
+
+    <section id="savedPanel" class="panel" style="display:none;">
+      <h3>Saved feedback</h3>
+      <div id="savedList"></div>
+    </section>
+  </main>
+
+  <a class="sos-btn" href="#" id="sosBtnFeed" title="Emergency SOS">SOS</a>
+
+  <script src="script.js"></script>
+  <script>
+    const fbForm = document.getElementById('feedbackForm');
+    const savedList = document.getElementById('savedList');
+    fbForm.addEventListener('submit', (e)=>{
+      e.preventDefault();
+      const rating = document.getElementById('rating').value;
+      const comments = document.getElementById('comments').value;
+      const arr = JSON.parse(localStorage.getItem('hc_feedback') || '[]');
+      arr.push({ rating, comments, at: new Date().toISOString() });
+      localStorage.setItem('hc_feedback', JSON.stringify(arr));
+      alert('Thanks — feedback saved locally.');
+      fbForm.reset();
+    });
+
+    document.getElementById('viewBtn').addEventListener('click', ()=>{
+      const arr = JSON.parse(localStorage.getItem('hc_feedback') || '[]');
+      savedList.innerHTML = '';
+      if (!arr.length) savedList.innerHTML = '<div class="muted">No feedback saved yet.</div>';
+      arr.slice().reverse().forEach(f => {
+        const el = document.createElement('div');
+        el.className = 'saved-item';
+        el.innerHTML = `<strong>${f.rating} ★</strong> <div class="muted">${new Date(f.at).toLocaleString()}</div><div style="margin-top:6px">${f.comments || ''}</div>`;
+        savedList.appendChild(el);
+      });
+      document.getElementById('savedPanel').style.display = 'block';
+    });
+  </script>
+</body>
+</html>

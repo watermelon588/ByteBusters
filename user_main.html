@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Health App Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600&display=swap" rel="stylesheet">
+<style>
+    body {
+        margin: 0;
+        font-family: 'Inter', sans-serif;
+        background: linear-gradient(135deg, #6A11CB, #2575FC);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        min-height: 100vh;
+        padding: 20px;
+        color: white;
+    }
+    h1 {
+        margin-bottom: 30px;
+    }
+    .card-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        max-width: 1200px;
+        width: 100%;
+    }
+    .card {
+        background: white;
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+        color: #333;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 25px rgba(0,0,0,0.2);
+    }
+    .icon {
+        font-size: 2.5rem;
+        margin-bottom: 15px;
+    }
+    .title {
+        font-size: 1.3rem;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .desc {
+        font-size: 0.95rem;
+        color: #f1f1f1;
+    }
+    /* Color themes for each card */
+    .teal { background: linear-gradient(135deg, #00b894, #00cec9); color: white; }
+    .orange { background: linear-gradient(135deg, #ff8a00, #ff6f00); color: white; }
+    .blue { background: linear-gradient(135deg, #00a8ff, #0097e6); color: white; }
+
+    /* Floating SOS Button */
+    .floating-sos {
+        position: fixed;
+        top: 50%;
+        right: 20px;
+        transform: translateY(-50%);
+        background-color: red;
+        border-radius: 50%;
+        width: 65px;
+        height: 65px;
+        font-size: 18px;
+        text-align: center;
+        color: white;
+        line-height: 65px;
+        cursor: pointer;
+        box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+        animation: pulse 1.5s infinite;
+        font-weight: bold;
+        z-index: 999;
+    }
+    @keyframes pulse {
+        0% { transform: scale(1) translateY(-50%); }
+        50% { transform: scale(1.1) translateY(-50%); }
+        100% { transform: scale(1) translateY(-50%); }
+    }
+</style>
+</head>
+<body>
+
+<h1>Welcome to Jeevacare</h1>
+
+<div class="card-container">
+    <!-- Each card should link to a separate page -->
+    <!-- Replace # with your page file like "chatbot.html" -->
+    <div class="card teal" onclick="window.location.href='chatbot.html'">
+        <div class="icon">🤖</div>
+        <div class="title">Report Health Issues</div>
+        <div class="desc">Connect with our AI chatbot for instant health advice.</div>
+    </div>
+
+    <div class="card orange" onclick="window.location.href='consultation.html'">
+        <div class="icon">💻</div>
+        <div class="title">Online Consultation</div>
+        <div class="desc">Book and attend virtual doctor consultations.</div>
+    </div>
+
+    <div class="card blue" onclick="window.location.href='campaigns.html'">
+        <div class="icon">📅</div>
+        <div class="title">Health Campaigns</div>
+        <div class="desc">Find and join health events happening near you.</div>
+    </div>
+
+    <div class="card teal" onclick="window.location.href='period-tracker.html'">
+        <div class="icon">🩸</div>
+        <div class="title">Period Tracker</div>
+        <div class="desc">Track your menstrual cycle and get reminders.</div>
+    </div>
+
+    <div class="card orange" onclick="window.location.href='nearest-hospital.html'">
+        <div class="icon">🏥</div>
+        <div class="title">Nearest Hospital</div>
+        <div class="desc">Find the closest hospital with directions.</div>
+    </div>
+
+    <div class="card blue" onclick="window.location.href='sos-page.html'">
+        <div class="icon">🚨</div>
+        <div class="title">Emergency SOS</div>
+        <div class="desc">Send an instant emergency alert to contacts.</div>
+    </div>
+</div>
+
+<!-- Floating SOS Button -->
+<div class="floating-sos" onclick="window.location.href='sos-page.html'">
+    SOS
+</div>
+
+</body>
+</html>

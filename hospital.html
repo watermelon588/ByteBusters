@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nearest Hospitals</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    #map { width:100%; height:56vh; border-radius:12px; border:1px solid rgba(0,0,0,0.06); }
+    .places-list { margin-top:12px; max-height:220px; overflow:auto; }
+    .place-item { padding:12px; border-radius:8px; background:#fff; margin-bottom:8px; box-shadow:0 6px 12px rgba(0,0,0,0.04); }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="container topbar-inner">
+      <div><h2 class="title">Nearest Hospitals</h2><div class="muted">Grant location access for best results</div></div>
+      <div><a class="btn btn-ghost" href="index.html">← Dashboard</a></div>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="panel">
+      <div id="map">Loading map…</div>
+      <div id="placesList" class="places-list"></div>
+    </section>
+  </main>
+
+  <a class="sos-btn" href="#" id="sosBtnHosp" title="Emergency SOS">SOS</a>
+
+  <script src="script.js"></script>
+
+  <!-- Google Maps JS (placeholder) -->
+  <script
+    src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_API_KEY&libraries=places&callback=initHospitalMap"
+    async defer></script>
+
+  <script>
+    function initHospitalMap(){
+      const defaultPos = { lat: 20.5937, lng: 78.9629 }; // India center fallback
+      const map = new google.maps.Map(document.getElementById('map'), { center: defaultPos, zoom: 6, disableDefaultUI: false });
+      const service = new google.maps.places.PlacesService(map);
+      const info = new google.maps.InfoWindow();
+
+      function renderPlaces(results){
+        const list = document.getElementById('placesList');
+        list.innerHTML = '';
+        results.forEach((p, i) => {
+          const item = document.createElement('div');
+          item.className = 'place-item';
+          item.innerHTML = `<strong>${i+1}. ${p.name}</strong><div class="muted">${p.vicinity || p.formatted_address || ''}</div>`;
+          item.onclick = () => map.setCenter(p.geometry.location);
+          list.appendChild(item);
+
+          // marker
+          new google.maps.Marker({ map, position: p.geometry.location, label: String(i+1) }).addListener('click', () => {
+            info.setContent(`<strong>${p.name}</strong><div>${p.vicinity || ''}</div>`);
+            info.open(map);
+          });
+        });
+      }
+
+      function searchAt(latLng){
+        map.setCenter(latLng); map.setZoom(14);
+        const req = { location: latLng, radius: 8000, type: ['hospital'] };
+        service.nearbySearch(req, (results, status) => {
+          if (status === google.maps.places.PlacesServiceStatus.OK && results) renderPlaces(results);
+          else document.getElementById('placesList').innerHTML = '<div class="muted">No hospitals found nearby.</div>';
+        });
+      }
+
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(pos => {
+          const loc = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+          new google.maps.Marker({ map, position: loc, icon: { path: google.maps.SymbolPath.CIRCLE, scale:6, fillColor:'#0ea5a4', fillOpacity:1, strokeWeight:1 }, title:'You are here' });
+          searchAt(loc);
+        }, () => searchAt(defaultPos));
+      } else {
+        searchAt(defaultPos);
+      }
+    }
+
+    // fallback if google fails
+    setTimeout(()=>{ if (typeof google === 'undefined') {
+      document.getElementById('map').innerHTML = '<div class="muted">Google Maps did not load. Replace YOUR_GOOGLE_API_KEY & check network.</div>';
+    } }, 2500);
+  </script>
+</body>
+</html>
