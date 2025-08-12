@@ -72,8 +72,22 @@
         cal.appendChild(el);
       }
       document.getElementById('resultsPanel').style.display='block';
+      // === START: GitHub API Integration Placeholder ===
+      // Replace with your GitHub API endpoint when ready
+      /*
+      fetch('https://your-github-username.github.io/period-tracker-api/data.json')
+        .then(res => res.json())
+        .then(apiData => {
+          console.log("GitHub API Data:", apiData);
+          // Example: display API data alongside calculated results
+          document.getElementById('resultsPanel').insertAdjacentHTML('beforeend', `
+            <p class="muted"><strong>API Notes:</strong> ${apiData.message}</p>
+          `);
+        })
+        .catch(err => console.error('API fetch error:', err));
+      */
+      // === END: GitHub API Integration Placeholder ===
     });
-
     document.getElementById('clearBtn').addEventListener('click', ()=>{
       document.getElementById('lastPeriod').value = '';
       document.getElementById('cycleLength').value = 28;
