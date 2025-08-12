@@ -5,11 +5,115 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Feedback</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    body {
+      background: #f4f9f9;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .panel {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+      margin-top: 20px;
+      animation: fadeIn 0.4s ease;
+    }
+    .label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    .star-rating {
+      display: flex;
+      gap: 6px;
+      font-size: 55px;
+      cursor: pointer;
+      margin-bottom: 16px;
+    }
+    .star {
+      color: #ccc;
+      transition: color 0.2s ease;
+    }
+    .star.active {
+      color: #ffb400;
+    }
+    textarea {
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 14px;
+      resize: vertical;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #009688;
+      box-shadow: 0 0 4px rgba(0,150,136,0.4);
+    }
+    .btn {
+      background: #009688;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 16px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.2s ease;
+    }
+    .btn:hover {
+      background: #00796B;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid #009688;
+      color: #009688;
+    }
+    .btn-outline:hover {
+      background: #009688;
+      color: #fff;
+    }
+    .saved-item {
+      background: #f9fdfd;
+      border: 1px solid #e0f2f1;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      animation: fadeIn 0.3s ease;
+    }
+    .muted {
+      color: #666;
+      font-size: 12px;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(5px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+    .sos-btn {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      background: #e53935;
+      color: #fff;
+      padding: 14px 18px;
+      border-radius: 50%;
+      font-size: 16px;
+      font-weight: bold;
+      text-decoration: none;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      transition: background 0.2s ease;
+    }
+    .sos-btn:hover {
+      background: #b71c1c;
+    }
+  </style>
 </head>
 <body>
   <header class="topbar">
     <div class="container topbar-inner">
-      <div><h2 class="title">Feedback</h2><div class="muted">Help us improve</div></div>
+      <div>
+        <h2 class="title">Feedback</h2>
+        <div class="muted">Help us improve</div>
+      </div>
       <div><a class="btn btn-ghost" href="index.html">← Dashboard</a></div>
     </div>
   </header>
@@ -17,15 +121,18 @@
   <main class="container">
     <section class="panel">
       <form id="feedbackForm">
-        <label class="label">Rating
-          <select id="rating" required>
-            <option value="">--</option>
-            <option>1</option><option>2</option><option>3</option><option>4</option><option>5</option>
-          </select>
-        </label>
-        <label class="label">Comments
-          <textarea id="comments" rows="5" placeholder="Share suggestions..."></textarea>
-        </label>
+        <label class="label">Rating</label>
+        <div class="star-rating" id="starRating">
+          <span class="star" data-value="1">★</span>
+          <span class="star" data-value="2">★</span>
+          <span class="star" data-value="3">★</span>
+          <span class="star" data-value="4">★</span>
+          <span class="star" data-value="5">★</span>
+        </div>
+
+        <label class="label">Comments</label>
+        <textarea id="comments" rows="5" placeholder="Share suggestions..."></textarea>
+
         <div style="margin-top:12px;">
           <button class="btn" type="submit">Submit</button>
           <button id="viewBtn" class="btn btn-outline" type="button">View saved</button>
@@ -41,19 +148,48 @@
 
   <a class="sos-btn" href="#" id="sosBtnFeed" title="Emergency SOS">SOS</a>
 
-  <script src="script.js"></script>
   <script>
+    let selectedRating = 0;
+    const stars = document.querySelectorAll('.star');
+
+    stars.forEach(star => {
+      star.addEventListener('click', () => {
+        selectedRating = parseInt(star.getAttribute('data-value'));
+        updateStars();
+      });
+      star.addEventListener('mouseover', () => {
+        highlightStars(parseInt(star.getAttribute('data-value')));
+      });
+      star.addEventListener('mouseout', () => {
+        updateStars();
+      });
+    });
+
+    function updateStars() {
+      stars.forEach(s => s.classList.toggle('active', parseInt(s.getAttribute('data-value')) <= selectedRating));
+    }
+    function highlightStars(rating) {
+      stars.forEach(s => s.classList.toggle('active', parseInt(s.getAttribute('data-value')) <= rating));
+    }
+
     const fbForm = document.getElementById('feedbackForm');
     const savedList = document.getElementById('savedList');
+
     fbForm.addEventListener('submit', (e)=>{
       e.preventDefault();
-      const rating = document.getElementById('rating').value;
+      if (selectedRating === 0) {
+        alert("Please select a rating.");
+        return;
+      }
       const comments = document.getElementById('comments').value;
+      // 🚀 ADD YOUR SEND LOGIC HERE
       const arr = JSON.parse(localStorage.getItem('hc_feedback') || '[]');
-      arr.push({ rating, comments, at: new Date().toISOString() });
+      arr.push({ rating: selectedRating, comments, at: new Date().toISOString() });
       localStorage.setItem('hc_feedback', JSON.stringify(arr));
       alert('Thanks — feedback saved locally.');
       fbForm.reset();
+      selectedRating = 0;
+      updateStars();
     });
 
     document.getElementById('viewBtn').addEventListener('click', ()=>{
