@@ -16,11 +16,17 @@ Clone the repository:
 
 git clone <your-repo-url>
 cd <your-project-folder>
+
 Install dependencies:
 
 npm install
 
-Clone the repository:
+Usage
 
-git clone <your-repo-url>
-cd <your-project-folder>
+Start the server:
+
+node server.js
+
+Open your browser and visit:
+
+http://localhost:3000
