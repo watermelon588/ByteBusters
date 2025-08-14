@@ -1,0 +1,234 @@
+
+/* light + dark theme */
+
+/* ===== Light Theme (Default) ===== */
+:root {
+  --panel-h: 56px;
+  --primary: #10b981;
+  --primary-dark: #059669;
+  --bg-light: #f9fafb;
+  --bg-panel: #ffffff;
+  --border: #e5e7eb;
+  --text-dark: #111827;
+  --text-muted: #6b7280;
+  --radius: 12px;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+/* ===== Dark Theme Variables ===== */
+/* body.dark-theme {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+body.dark-theme .topbar {
+  background: #111827;
+  border-bottom-color: #374151;
+}
+
+body.dark-theme .sidebar {
+  background: #111827;
+  border-left-color: #374151;
+}
+
+body.dark-theme .result {
+  border-color: #374151;
+}
+
+body.dark-theme .result:hover {
+  background: #1f2937;
+} */
+
+:root.dark {
+  --bg-light: #111827;
+  --bg-panel: #1f2937;
+  --border: #374151;
+  --text-dark: #f9fafb;
+  --text-muted: #9ca3af;
+  --shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ===== General Layout ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: var(--bg-light);
+  color: var(--text-dark);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* ===== Top Bar ===== */
+.topbar {
+  height: var(--panel-h);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px;
+  background: linear-gradient(135deg, var(--bg-panel) 0%, var(--bg-light) 100%);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  box-shadow: var(--shadow);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.topbar h1 {
+  font-size: 18px;
+  margin: 0 12px 0 0;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* Inputs & Buttons */
+.topbar select,
+.topbar input,
+.topbar button {
+  height: 38px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg-panel);
+  padding: 0 12px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease, background 0.3s ease, color 0.3s ease;
+  color: var(--text-dark);
+}
+
+.topbar select:focus,
+.topbar input:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+
+.topbar button {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  font-weight: 600;
+}
+
+.topbar button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+  box-shadow: 0 3px 8px rgba(16, 185, 129, 0.3);
+}
+
+/* ===== Layout ===== */
+.layout {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 12px;
+  height: calc(100vh - var(--panel-h));
+  padding: 8px;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--border);
+  box-shadow: var(--shadow);
+  transition: background 0.3s ease;
+}
+
+/* ===== Sidebar ===== */
+.sidebar {
+  background: var(--bg-panel);
+  border-left: 1px solid var(--border);
+  overflow: auto;
+  padding: 12px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: background 0.3s ease, border-color 0.3s ease;
+}
+
+.sidebar h2 {
+  font-size: 15px;
+  margin: 6px 0 12px;
+  font-weight: 700;
+  color: var(--text-dark);
+}
+
+/* ===== NGO Result Cards ===== */
+.result {
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  background: var(--bg-panel);
+  transition: all 0.2s ease, background 0.3s ease;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.result:hover {
+  background: var(--bg-light);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.result .name {
+  font-weight: 600;
+  font-size: 15px;
+  color: var(--text-dark);
+}
+
+.result .meta {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.footer {
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 900px) {
+  .layout {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  .sidebar {
+    height: 40vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  #map {
+    height: 60vh;
+    border-radius: 0;
+    box-shadow: none;
+  }
+}
+
+/* swith theme modification  */
+
+/* body.dark-theme {
+  background: #1f2937;
+  color: #f3f4f6;
+}
+
+body.dark-theme .topbar {
+  background: #111827;
+  border-bottom-color: #374151;
+}
+
+body.dark-theme .sidebar {
+  background: #111827;
+  border-left-color: #374151;
+}
+
+body.dark-theme .result {
+  border-color: #374151;
+}
+
+body.dark-theme .result:hover {
+  background: #1f2937;
+} */
