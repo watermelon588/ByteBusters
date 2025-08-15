@@ -5,13 +5,17 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NGO Performance</title>
   <style>
-    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f7fb}
-    header{background:#2c3e50;color:#fff;padding:16px;text-align:center}
-    nav{display:flex;gap:10px;justify-content:center;background:#34495e;flex-wrap:wrap}
-    nav a{color:#fff;text-decoration:none;padding:12px 16px;border-radius:8px}
-    nav a:hover{background:#2c3e50}
-    .container{padding:20px}
-    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06);margin-bottom:12px}
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(120deg,#e0eafc 0%,#cfdef3 100%);min-height:100vh;}
+    header{background:#2c3e50;color:#fff;padding:32px 0;text-align:center;box-shadow:0 2px 12px rgba(44,62,80,0.10);font-size:2.2em;letter-spacing:1px;}
+    nav{display:flex;gap:14px;justify-content:center;background:#34495e;flex-wrap:wrap;padding:16px 0;box-shadow:0 2px 8px rgba(44,62,80,0.04)}
+    nav a{color:#fff;text-decoration:none;padding:14px 32px;border-radius:10px;font-weight:600;transition:background .2s,transform .2s;font-size:1.08em;}
+    nav a:hover{background:#2c3e50;transform:scale(1.08);}
+    .container{padding:40px;max-width:1000px;margin:0 auto}
+    .card{background:#fff;border-radius:20px;padding:36px 28px;box-shadow:0 8px 32px rgba(44,62,80,.13);transition:transform .18s,box-shadow .18s;position:relative;border:1.5px solid #e3eafc;margin-bottom:22px;}
+    .card:hover{transform:translateY(-6px) scale(1.03);box-shadow:0 16px 40px rgba(44,62,80,.18);border-color:#b6c6e3;}
+    .card strong{font-size:1.15em;color:#2c3e50;letter-spacing:.5px;}
+    @media (max-width:700px){.container{padding:16px}.card{padding:22px 10px}}
+    @media (max-width:400px){header{font-size:1.3em;}}
   </style>
 </head>
 <body>

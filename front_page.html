@@ -1,508 +1,99 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jeevacare - Health & Well-being Platform</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Jeevacare</title>
+  <style>
+    :root{--bg1: #e0eafc; --bg2:#cfdef3}
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(120deg,var(--bg1) 0%,var(--bg2) 100%);min-height:100vh;position:relative;overflow-x:hidden}
+    /* animated background blobs */
+    .bg-anim{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+    .blob{position:absolute;border-radius:50%;filter:blur(36px);opacity:.35;transform:translate3d(0,0,0)}
+    .blob.b1{width:420px;height:420px;background:linear-gradient(135deg,#9dd6ff,#8bb8f7);left:-120px;top:-60px;animation:blobMove 18s linear infinite}
+    .blob.b2{width:360px;height:360px;background:linear-gradient(135deg,#ffd59e,#ffb37f);right:-100px;top:40px;animation:blobMove 22s linear infinite reverse}
+    .blob.b3{width:260px;height:260px;background:linear-gradient(135deg,#bdebb3,#8fd1a6);left:10%;bottom:-80px;animation:blobMove 26s linear infinite}
+    @keyframes blobMove{0%{transform:translateY(0) translateX(0) scale(1)}50%{transform:translateY(-40px) translateX(30px) scale(1.05)}100%{transform:translateY(0) translateX(0) scale(1)}}
 
-        body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            overflow-x: hidden;
-        }
+    header{background:#2c3e50;color:#fff;padding:32px 0;text-align:center;box-shadow:0 2px 12px rgba(44,62,80,0.10);font-size:2.2em;letter-spacing:1px;position:relative;z-index:1}
+    .container{padding:40px;max-width:1000px;margin:0 auto;position:relative;z-index:1}
 
-        .container {
-            max-width: 400px;
-            margin: 80px auto 100px;
-            padding: 20px;
-            position: relative;
-            z-index: 10;
-        }
+    /* vertical stack: center cards and make them full-width up to a max */
+    .cards-grid{display:flex;flex-direction:column;gap:24px;align-items:center}
+    .card{background:#fff;border-radius:20px;padding:36px 28px;box-shadow:0 8px 32px rgba(44,62,80,.13);transition:transform .18s,box-shadow .18s;position:relative;border:1.5px solid #e3eafc;display:flex;flex-direction:column;justify-content:space-between;max-width:720px;width:100%}
+    .card:hover{transform:translateY(-6px) scale(1.01);box-shadow:0 16px 40px rgba(44,62,80,.18);border-color:#b6c6e3}
+    .card strong{font-size:1.15em;color:#2c3e50;letter-spacing:.5px}
+    .card .info{margin-bottom:22px;line-height:1.8;font-size:1.08em;color:#34495e}
+    .btn{background:linear-gradient(90deg,#27ae60 0%,#219150 100%);color:#fff;border:none;border-radius:10px;padding:14px 32px;cursor:pointer;font-size:1.13em;font-weight:600;box-shadow:0 2px 12px rgba(39,174,96,.10);transition:background .2s,box-shadow .2s,transform .2s;display:inline-flex;align-items:center;gap:10px;text-decoration:none;justify-content:center}
+    .btn:hover{background:linear-gradient(90deg,#219150 0%,#27ae60 100%);box-shadow:0 8px 24px rgba(39,174,96,.16);transform:scale(1.02)}
 
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.37);
-        }
+    /* testimonials */
+    .testimonials-wrap{max-width:1000px;margin:36px auto 96px;padding:24px 20px;position:relative;z-index:1}
+    .testimonials-wrap h2{margin:0 0 18px;color:#2c3e50}
+    .test-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .testimonial{background:#fff;border-radius:14px;padding:18px;box-shadow:0 8px 24px rgba(44,62,80,.08);border:1px solid #eef6ff}
+    .testimonial p{color:#556;line-height:1.6;margin-bottom:10px}
+    .testimonial strong{display:block;color:#2c3e50}
 
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            text-align: center;
-            padding: 20px;
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .logo-container {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 20px;
-            background: white;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .logo {
-            width: 50px;
-            height: 50px;
-            position: relative;
-        }
-
-        .medical-cross {
-            position: absolute;
-            background: #00796B;
-            border-radius: 2px;
-        }
-
-        .cross-vertical {
-            width: 12px;
-            height: 40px;
-            left: 19px;
-            top: 5px;
-        }
-
-        .cross-horizontal {
-            width: 40px;
-            height: 12px;
-            left: 5px;
-            top: 19px;
-        }
-
-        .heart {
-            position: absolute;
-            width: 50px;
-            height: 45px;
-            top: 2px;
-            left: 0;
-        }
-
-        .heart:before,
-        .heart:after {
-            content: '';
-            width: 26px;
-            height: 40px;
-            position: absolute;
-            left: 12px;
-            background: #F57C00;
-            border-radius: 25px 25px 0 0;
-            transform: rotate(-45deg);
-            transform-origin: 0 100%;
-            opacity: 0.8;
-        }
-
-        .heart:after {
-            left: 0;
-            transform: rotate(45deg);
-            transform-origin: 100% 100%;
-        }
-
-        .header h1 {
-            color: #333;
-            font-size: 24px;
-            font-weight: 700;
-            margin: 0;
-        }
-
-        .header p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 16px;
-            line-height: 1.6;
-            padding: 0 20px;
-        }
-
-        .cards-container {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-        }
-
-        .card {
-            border-radius: 25px;
-            padding: 30px;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            animation: slideUp 0.8s ease-out;
-        }
-
-        .card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.3);
-        }
-
-        .card-citizens {
-            background: linear-gradient(135deg, #00796B 0%, #26a69a 100%);
-            animation-delay: 0.2s;
-        }
-
-        .card-health {
-            background: linear-gradient(135deg, #F57C00 0%, #ffb74d 100%);
-            animation-delay: 0.4s;
-        }
-
-        .card-ngo {
-            background: linear-gradient(135deg, #4FC3F7 0%, #81d4fa 100%);
-            animation-delay: 0.6s;
-        }
-
-        .card-background {
-            position: absolute;
-            top: 0;
-            right: 0;
-            opacity: 0.15;
-            width: 120px;
-            height: 120px;
-        }
-
-        .card-content {
-            position: relative;
-            z-index: 2;
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .card-icon {
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-radius: 18px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-
-        .icon {
-            width: 32px;
-            height: 32px;
-            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
-        }
-
-        .card-text {
-            flex: 1;
-        }
-
-        .card h3 {
-            color: white;
-            font-size: 22px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .card p {
-            color: rgba(255, 255, 255, 0.95);
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        .card-button {
-            width: 100%;
-            margin-top: 20px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            border-radius: 18px;
-            color: white;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .card-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: translateY(-1px);
-        }
-
-        .arrow {
-            width: 20px;
-            height: 20px;
-            fill: currentColor;
-        }
-
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            text-align: center;
-            padding: 20px;
-            box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.1);
-            z-index: 100;
-        }
-
-        .footer p {
-            color: #333;
-            font-size: 14px;
-            margin: 0;
-        }
-
-        /* Floating Background Shapes */
-        .floating-shapes {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            top: 0;
-            left: 0;
-            z-index: 1;
-        }
-
-        .shape {
-            position: absolute;
-            opacity: 0.1;
-            animation: floatShapes 20s infinite linear;
-        }
-
-        .shape:nth-child(1) { left: 10%; animation-delay: 0s; }
-        .shape:nth-child(2) { left: 20%; animation-delay: 2s; }
-        .shape:nth-child(3) { left: 30%; animation-delay: 4s; }
-        .shape:nth-child(4) { left: 40%; animation-delay: 6s; }
-        .shape:nth-child(5) { left: 50%; animation-delay: 8s; }
-        .shape:nth-child(6) { left: 60%; animation-delay: 10s; }
-        .shape:nth-child(7) { left: 70%; animation-delay: 12s; }
-        .shape:nth-child(8) { left: 80%; animation-delay: 14s; }
-        .shape:nth-child(9) { left: 90%; animation-delay: 16s; }
-
-        /* Animations */
-        @keyframes float {
-            0% { transform: translateY(0px); }
-            50% { transform: translateY(-20px); }
-            100% { transform: translateY(0px); }
-        }
-
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes floatShapes {
-            0% { transform: translateY(100vh) rotate(0deg); }
-            100% { transform: translateY(-100vh) rotate(360deg); }
-        }
-
-        @keyframes pulseGlow {
-            0% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(79, 195, 247, 0.7); }
-            70% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 0 0 10px rgba(79, 195, 247, 0); }
-            100% { box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2), 0 0 0 0 rgba(79, 195, 247, 0); }
-        }
-
-        /* Responsive Design */
-        @media (max-width: 480px) {
-            .container {
-                padding: 15px;
-                max-width: 100%;
-            }
-            
-            .card {
-                padding: 25px;
-            }
-            
-            .card-content {
-                gap: 15px;
-            }
-            
-            .card-icon {
-                width: 56px;
-                height: 56px;
-            }
-            
-            .icon {
-                width: 28px;
-                height: 28px;
-            }
-            
-            .header h1 {
-                font-size: 24px;
-            }
-            
-            .header p {
-                font-size: 15px;
-            }
-        }
-    </style>
+    /* responsive tweaks */
+    @media (max-width:700px){.container{padding:24px}.card{padding:22px 16px}}
+    @media (max-width:420px){header{font-size:1.3em}.btn{font-size:1em;padding:10px 16px}}
+  </style>
 </head>
 <body>
-    <!-- Floating Background Shapes -->
-    <div class="floating-shapes">
-        <div class="shape">
-            <svg width="60" height="60" viewBox="0 0 60 60" fill="white">
-                <path d="M30 0L37.5 22.5L60 30L37.5 37.5L30 60L22.5 37.5L0 30L22.5 22.5Z"/>
-            </svg>
+  <div class="bg-anim" aria-hidden>
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+
+  <header><h1>Jeevacare</h1></header>
+
+  <div class="container">
+    <div class="cards-grid">
+      <div class="card">
+        <div class="info">
+          <strong>Citizens Portal</strong>
+          <div>Access community health resources and services.</div>
         </div>
-        <div class="shape">
-            <svg width="40" height="40" viewBox="0 0 40 40" fill="white">
-                <circle cx="20" cy="20" r="20"/>
-            </svg>
+        <a class="btn" href="#">Open</a>
+      </div>
+
+      <div class="card">
+        <div class="info">
+          <strong>Health Services</strong>
+          <div>Find nearby healthcare providers and support.</div>
         </div>
-        <div class="shape">
-            <svg width="50" height="50" viewBox="0 0 50 50" fill="white">
-                <polygon points="25,0 50,50 0,50"/>
-            </svg>
+        <a class="btn" href="#">Open</a>
+      </div>
+
+      <div class="card">
+        <div class="info">
+          <strong>NGO Partners</strong>
+          <div>Manage programs, campaigns, and impact tracking.</div>
         </div>
-        <div class="shape">
-            <svg width="35" height="35" viewBox="0 0 35 35" fill="white">
-                <rect x="0" y="0" width="35" height="35" rx="10"/>
-            </svg>
-        </div>
-        <div class="shape">
-            <svg width="45" height="45" viewBox="0 0 45 45" fill="white">
-                <polygon points="22.5,0 27.5,17.5 45,22.5 27.5,27.5 22.5,45 17.5,27.5 0,22.5 17.5,17.5"/>
-            </svg>
-        </div>
-        <div class="shape">
-            <svg width="30" height="30" viewBox="0 0 30 30" fill="white">
-                <ellipse cx="15" cy="15" rx="15" ry="10"/>
-            </svg>
-        </div>
-        <div class="shape">
-            <svg width="55" height="55" viewBox="0 0 55 55" fill="white">
-                <path d="M27.5 0L33.5 21.5L55 27.5L33.5 33.5L27.5 55L21.5 33.5L0 27.5L21.5 21.5Z"/>
-            </svg>
-        </div>
-        <div class="shape">
-            <svg width="25" height="25" viewBox="0 0 25 25" fill="white">
-                <rect x="0" y="0" width="25" height="25" transform="rotate(45 12.5 12.5)"/>
-            </svg>
-        </div>
-        <div class="shape">
-            <svg width="38" height="38" viewBox="0 0 38 38" fill="white">
-                <circle cx="19" cy="19" r="19"/>
-            </svg>
-        </div>
+        <a class="btn" href="dashboard.html">Open</a>
+      </div>
     </div>
+  </div>
 
-    <div class="container">
-        <!-- Main Content Cards -->
-        <div class="cards-container">
-            
-            <!-- Citizens Card -->
-            <div class="card card-citizens">
-                <svg class="card-background" viewBox="0 0 120 120" fill="white">
-                    <circle cx="60" cy="60" r="40" stroke="white" stroke-width="2" fill="none"/>
-                    <circle cx="60" cy="60" r="20" stroke="white" stroke-width="2" fill="none"/>
-                    <path d="M40 60 L60 40 L80 60 L60 80 Z" stroke="white" stroke-width="2" fill="none"/>
-                </svg>
-                
-                <div class="card-content">
-                    <div class="card-icon">
-                        <svg class="icon" viewBox="0 0 32 32" fill="white">
-                            <circle cx="16" cy="8" r="6"/>
-                            <path d="M16 18c-6 0-10 3-10 8v2h20v-2c0-5-4-8-10-8z"/>
-                        </svg>
-                    </div>
-                    <div class="card-text">
-                        <h3>Citizens</h3>
-                    </div>
-                </div>
-                <button class="card-button">
-                    <span>Browse Services</span>
-                    <svg class="arrow" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- Health Services Card -->
-            <div class="card card-health">
-                <svg class="card-background" viewBox="0 0 120 120" fill="white">
-                    <rect x="20" y="20" width="80" height="80" rx="10" stroke="white" stroke-width="2" fill="none"/>
-                    <path d="M40 40h40v40H40z" stroke="white" stroke-width="2" fill="none"/>
-                    <circle cx="60" cy="60" r="15" stroke="white" stroke-width="2" fill="none"/>
-                    <path d="M55 60h10M60 55v10" stroke="white" stroke-width="3"/>
-                </svg>
-                
-                <div class="card-content">
-                    <div class="card-icon">
-                        <svg class="icon" viewBox="0 0 32 32" fill="white">
-                            <rect x="4" y="8" width="24" height="20" rx="2"/>
-                            <path d="M4 12h24M8 8V6a2 2 0 012-2h10a2 2 0 012 2v2"/>
-                            <path d="M14 18h4M16 16v4" stroke="white" stroke-width="2"/>
-                        </svg>
-                    </div>
-                    <div class="card-text">
-                        <h3>Health Services</h3>
-                    </div>
-                </div>
-                <button class="card-button">
-                    <span>Access Services</span>
-                    <svg class="arrow" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
-
-            <!-- NGO Card -->
-            <div class="card card-ngo">
-                <svg class="card-background" viewBox="0 0 120 120" fill="white">
-                    <circle cx="40" cy="40" r="15" stroke="white" stroke-width="2" fill="none"/>
-                    <circle cx="80" cy="40" r="15" stroke="white" stroke-width="2" fill="none"/>
-                    <circle cx="60" cy="80" r="15" stroke="white" stroke-width="2" fill="none"/>
-                    <path d="M40 55L60 65M80 55L60 65" stroke="white" stroke-width="2"/>
-                </svg>
-                
-                <div class="card-content">
-                    <div class="card-icon">
-                        <svg class="icon" viewBox="0 0 32 32" fill="white">
-                            <path d="M16 2L20 10L28 8L24 16L32 18L24 22L28 30L20 26L16 34L12 26L4 30L8 22L0 18L8 16L4 8L12 10L16 2Z"/>
-                        </svg>
-                    </div>
-                    <div class="card-text">
-                        <h3>NGO Partners</h3>
-                    </div>
-                </div>
-                <button class="card-button">
-                    <span>Explore Programs</span>
-                    <svg class="arrow" viewBox="0 0 20 20" fill="currentColor">
-                        <path fill-rule="evenodd" d="M10.293 5.293a1 1 0 011.414 0l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414-1.414L12.586 11H5a1 1 0 110-2h7.586l-2.293-2.293a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                    </svg>
-                </button>
-            </div>
-        </div>
+  <div class="testimonials-wrap">
+    <h2>What people say</h2>
+    <div class="test-grid">
+      <div class="testimonial">
+        <p>"Jeevacare helped our village organize a free health camp quickly — very easy to use and effective."</p>
+        <strong>— Rekha, Community Volunteer</strong>
+      </div>
+      <div class="testimonial">
+        <p>"We received timely support for an emergency patient through the platform. Highly recommend."</p>
+        <strong>— Dr. Anand, Local Clinic</strong>
+      </div>
+      <div class="testimonial">
+        <p>"The NGO dashboard made campaign planning simple and transparent for our team."</p>
+        <strong>— Priya, NGO Coordinator</strong>
+      </div>
     </div>
+  </div>
 
-    <!-- Fixed Header -->
-    <div class="header">
-        <h1>Welcome to Jeevacare</h1>
-    </div>
-
-    <!-- Fixed Footer -->
-    <div class="footer">
-        <p>🌟 Connecting health, building communities • Made with ❤️ for healthier lives</p>
-    </div>
 </body>
 </html>
