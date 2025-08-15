@@ -1,24 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>NGO Dashboard</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 0; }
-    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
-    nav { display: flex; justify-content: center; background: #34495e; }
-    nav a { padding: 12px 20px; color: white; text-decoration: none; }
-    nav a:hover { background: #2c3e50; }
-    .container { padding: 20px; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
-    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-    h2 { margin-top: 0; color: #2c3e50; }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f7fb}
+    header{background:#2c3e50;color:#fff;padding:16px;text-align:center}
+    nav{display:flex;gap:10px;justify-content:center;background:#34495e;flex-wrap:wrap}
+    nav a{color:#fff;text-decoration:none;padding:12px 16px;border-radius:8px}
+    nav a:hover{background:#2c3e50}
+    .container{padding:20px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px}
+    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06)}
+    .muted{color:#6b7684}
+    .btn{display:inline-block;background:#3498db;color:#fff;padding:8px 12px;border-radius:8px;text-decoration:none}
+    .btn:hover{background:#2980b9}
   </style>
 </head>
 <body>
   <header>
-    <h1 id="ngoName">NGO Dashboard</h1>
+    <h1 id="ngoTitle">NGO Dashboard</h1>
   </header>
 
   <nav>
@@ -26,26 +28,33 @@
     <a href="performance.html">NGO Performance</a>
     <a href="campaign.html">Campaign Alert</a>
     <a href="patients.html">Patient List</a>
+    <a href="index1.html" id="logoutLink">Logout</a>
   </nav>
 
   <div class="container">
-    <h2>Welcome to the NGO Dashboard</h2>
-    <p>Track campaigns, manage emergencies, and support patients in need.</p>
-    <div class="card-grid">
-      <div class="card"><h2>Local Health Map</h2><p>[API: Local health data]</p></div>
-      <div class="card"><h2>Emergency Cases</h2><p>[API: Emergency response]</p></div>
-      <div class="card"><h2>User Management</h2><p>[API: NGO User & Role Management]</p></div>
-      <div class="card"><h2>Campaign Alert</h2><p>Plan & manage campaigns</p></div>
-      <div class="card"><h2>Performance List</h2><p>See NGO rankings</p></div>
+    <div class="card">
+      <h2>Welcome</h2>
+      <p class="muted">Track campaigns, manage emergencies, and support patients in need.</p>
+    </div>
+
+    <div class="grid" style="margin-top:14px">
+      <div class="card"><h3>Local Health Map</h3><p class="muted">[API: Local health data]</p><a class="btn" href="#">Open</a></div>
+      <div class="card"><h3>Emergency Cases</h3><p class="muted">[API: Emergency response]</p><a class="btn" href="#">Open</a></div>
+      <div class="card"><h3>User Management</h3><p class="muted">[API: NGO User & Role Management]</p><a class="btn" href="#">Open</a></div>
+      <div class="card"><h3>Campaign Alert</h3><p class="muted">Plan & manage campaigns.</p><a class="btn" href="campaign.html">Create</a></div>
+      <div class="card"><h3>Performance List</h3><p class="muted">See NGO rankings.</p><a class="btn" href="performance.html">View</a></div>
     </div>
   </div>
 
   <script>
-    // Fetch NGO name from localStorage (set after login)
-    const ngoName = localStorage.getItem("ngoName");
-    if (ngoName) {
-      document.getElementById("ngoName").textContent = ngoName + " - Dashboard";
-    }
+    // Auth gate + NGO name
+    const ngo = JSON.parse(localStorage.getItem('ngo') || 'null');
+    if (!ngo) location.href = 'login.html';
+    document.getElementById('ngoTitle').textContent = `${ngo.ngoName} — Dashboard`;
+
+    document.getElementById('logoutLink').addEventListener('click', () => {
+      localStorage.removeItem('token'); localStorage.removeItem('ngo'); localStorage.removeItem('ngoName');
+    });
   </script>
 </body>
 </html>

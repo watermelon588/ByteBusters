@@ -4,62 +4,90 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NGO Registration</title>
+  <style>
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#ff9a9e,#fad0c4);min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .form-container{background:#fff;padding:30px;border-radius:14px;width:min(92vw,520px);box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    h2{margin:0 0 14px;color:#2c3e50}
+    .muted{color:#607086;margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}}
+    label{display:block;font-weight:600}
+    input,select{width:100%;padding:12px;margin-top:6px;border:1px solid #dfe6ee;border-radius:8px;font-size:15px}
+    .full{grid-column:1/-1}
+    .btn{width:100%;padding:12px;margin-top:16px;background:#e67e22;border:none;color:#fff;border-radius:8px;font-size:16px;cursor:pointer}
+    .btn:hover{background:#d35400}
+    .links{text-align:center;margin-top:12px}
+    a{color:#e67e22;text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
 </head>
 <body>
-  <h2>NGO Registration</h2>
-  <form id="registerForm">
-    <label>NGO Name</label>
-    <input type="text" id="name" required><br>
-
-    <label>NGO UID</label>
-    <input type="text" id="uid" required><br>
-
-    <label>Password</label>
-    <input type="password" id="password" required><br>
-
-    <label>Confirm Password</label>
-    <input type="password" id="confirmPassword" required><br>
-
-    <label>Position</label>
-    <select id="position" required>
-      <option value="Secretary">Secretary</option>
-      <option value="President">President</option>
-      <option value="Vice President">Vice President</option>
-    </select><br><br>
-
-    <button type="submit">Register</button>
-  </form>
-
-  <p>Already registered? <a href="login.html">Login here</a></p>
+  <div class="form-container">
+    <h2>Register NGO</h2>
+    <div class="muted">Create your organization account.</div>
+    <form id="regForm">
+      <div class="grid">
+        <label>NGO Name
+          <input type="text" name="ngoName" required>
+        </label>
+        <label>NGO UID (for login)
+          <input type="text" name="uid" required>
+        </label>
+        <label>Contact Person
+          <input type="text" name="contactPerson" required>
+        </label>
+        <label>Position
+          <select name="position" required>
+            <option value="">-- Select --</option>
+            <option>Secretary</option>
+            <option>President</option>
+            <option>Vice president</option>
+          </select>
+        </label>
+        <label>Email
+          <input type="email" name="email" required>
+        </label>
+        <label>Location
+          <input type="text" name="location" required>
+        </label>
+        <label class="full">Password
+          <input type="password" name="password" required>
+        </label>
+      </div>
+      <button class="btn" type="submit">Register</button>
+    </form>
+    <div class="links">Already registered? <a href="login.html">Login</a> • <a href="index1.html">Home</a></div>
+  </div>
 
   <script>
-    document.getElementById("registerForm").addEventListener("submit", async (e) => {
+    const API_BASE = 'http://localhost:5000/api';
+
+    document.getElementById('regForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
+      const form = new FormData(e.target);
+      const payload = {
+        ngoName: form.get('ngoName').trim(),
+        uid: form.get('uid').trim(),
+        contactPerson: form.get('contactPerson').trim(),
+        position: form.get('position'),
+        email: form.get('email').trim(),
+        location: form.get('location').trim(),
+        password: form.get('password')
+      };
+      try {
+        const res = await fetch(`${API_BASE}/auth/register`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) return alert(data.message || 'Registration failed');
 
-      const name = document.getElementById("name").value;
-      const uid = document.getElementById("uid").value;
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
-      const position = document.getElementById("position").value;
-
-      if (password !== confirmPassword) {
-        alert("Passwords do not match!");
-        return;
-      }
-
-      const res = await fetch("http://localhost:5000/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, uid, password, position })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        alert("Registration successful! Please login.");
-        window.location.href = "login.html";
-      } else {
-        alert("Error: " + data.message);
+        alert('Registered successfully. Please login.');
+        location.href = 'login.html';
+      } catch (err) {
+        console.error(err);
+        alert('Network error');
       }
     });
   </script>

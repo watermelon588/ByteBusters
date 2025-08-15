@@ -4,49 +4,74 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>NGO Login</title>
+  <style>
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#74ebd5,#9face6);min-height:100vh;display:flex;align-items:center;justify-content:center}
+    .form-container{background:#fff;padding:30px;border-radius:14px;width:min(92vw,420px);box-shadow:0 10px 30px rgba(0,0,0,.15)}
+    h2{margin:0 0 14px;color:#2c3e50}
+    .muted{color:#607086;margin-bottom:12px}
+    label{display:block;margin-top:12px;font-weight:600}
+    input,select{width:100%;padding:12px;margin-top:6px;border:1px solid #dfe6ee;border-radius:8px;font-size:15px}
+    .btn{width:100%;padding:12px;margin-top:16px;background:#3498db;border:none;color:#fff;border-radius:8px;font-size:16px;cursor:pointer}
+    .btn:hover{background:#2980b9}
+    .links{margin-top:12px;text-align:center}
+    a{color:#3498db;text-decoration:none}
+    a:hover{text-decoration:underline}
+  </style>
 </head>
 <body>
-  <h2>NGO Login</h2>
-  <form id="loginForm">
-    <label>NGO UID</label>
-    <input type="text" id="uid" required><br>
-
-    <label>Password</label>
-    <input type="password" id="password" required><br>
-
-    <label>Position</label>
-    <select id="position" required>
-      <option value="Secretary">Secretary</option>
-      <option value="President">President</option>
-      <option value="Vice President">Vice President</option>
-    </select><br><br>
-
-    <button type="submit">Login</button>
-  </form>
-
-  <p>Not registered? <a href="register.html">Register here</a></p>
+  <div class="form-container">
+    <h2>Login</h2>
+    <div class="muted">Enter your NGO UID, select your position, and password.</div>
+    <form id="loginForm">
+      <label>NGO UID
+        <input type="text" name="uid" required>
+      </label>
+      <label>Position
+        <select name="position" required>
+          <option value="">-- Select --</option>
+          <option>Secretary</option>
+          <option>President</option>
+          <option>Vice president</option>
+        </select>
+      </label>
+      <label>Password
+        <input type="password" name="password" required>
+      </label>
+      <button class="btn" type="submit">Login</button>
+    </form>
+    <div class="links">New NGO? <a href="register.html">Register here</a> • <a href="index1.html">Home</a></div>
+  </div>
 
   <script>
-    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    const API_BASE = 'http://localhost:5000/api'; // change if server runs elsewhere
+
+    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
       e.preventDefault();
+      const form = new FormData(e.target);
+      const payload = {
+        uid: form.get('uid').trim(),
+        position: form.get('position'),
+        password: form.get('password')
+      };
+      try {
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+        const data = await res.json();
+        if (!res.ok) return alert(data.message || 'Login failed');
 
-      const uid = document.getElementById("uid").value;
-      const password = document.getElementById("password").value;
-      const position = document.getElementById("position").value;
+        // Save token + NGO info
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('ngo', JSON.stringify(data.ngo));
+        localStorage.setItem('ngoName', data.ngo.ngoName);
 
-      const res = await fetch("http://localhost:5000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid, password, position })
-      });
-
-      const data = await res.json();
-
-      if (data.success) {
-        localStorage.setItem("ngoUser", JSON.stringify(data.user));
-        window.location.href = "dashboard.html";
-      } else {
-        alert("Error: " + data.message);
+        // Go to dashboard
+        location.href = 'dashboard.html';
+      } catch (err) {
+        console.error(err);
+        alert('Network error');
       }
     });
   </script>

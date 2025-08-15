@@ -1,19 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Patient List</title>
   <style>
-    body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 0; }
-    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
-    nav { display: flex; justify-content: center; background: #34495e; }
-    nav a { padding: 12px 20px; color: white; text-decoration: none; }
-    nav a:hover { background: #2c3e50; }
-    .container { padding: 20px; }
-    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 15px; }
-    .btn { background: #3498db; border: none; padding: 8px 14px; border-radius: 8px; color: white; cursor: pointer; }
-    .btn:hover { background: #2980b9; }
+    body{margin:0;font-family:'Segoe UI',sans-serif;background:#f5f7fb}
+    header{background:#2c3e50;color:#fff;padding:16px;text-align:center}
+    nav{display:flex;gap:10px;justify-content:center;background:#34495e;flex-wrap:wrap}
+    nav a{color:#fff;text-decoration:none;padding:12px 16px;border-radius:8px}
+    nav a:hover{background:#2c3e50}
+    .container{padding:20px}
+    .card{background:#fff;border-radius:12px;padding:18px;box-shadow:0 4px 12px rgba(0,0,0,.06);margin-bottom:12px}
+    .btn{background:#27ae60;color:#fff;border:none;border-radius:8px;padding:8px 12px;cursor:pointer}
+    .btn:hover{background:#1f8f4d}
   </style>
 </head>
 <body>
@@ -24,18 +24,19 @@
     <a href="campaign.html">Campaign Alert</a>
     <a href="patients.html">Patient List</a>
   </nav>
+
   <div class="container">
     <div class="card">
       <strong>Name:</strong> Rajesh Kumar<br>
       <strong>Disease:</strong> Kidney Transplant<br>
-      <strong>Estimated Cost:</strong> ₹6,00,000<br>
-      <button class="btn">Fund the Treatment</button>
+      <strong>Estimated Cost:</strong> ₹6,00,000<br><br>
+      <button class="btn" onclick="alert('Funding flow to be integrated (e.g., Razorpay/Stripe).')">Fund the Treatment</button>
     </div>
     <div class="card">
       <strong>Name:</strong> Ayesha Begum<br>
       <strong>Disease:</strong> Bone Marrow Transplant<br>
-      <strong>Estimated Cost:</strong> ₹8,50,000<br>
-      <button class="btn">Fund the Treatment</button>
+      <strong>Estimated Cost:</strong> ₹8,50,000<br><br>
+      <button class="btn" onclick="alert('Funding flow to be integrated (e.g., Razorpay/Stripe).')">Fund the Treatment</button>
     </div>
   </div>
 </body>
