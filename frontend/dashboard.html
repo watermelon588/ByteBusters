@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Dashboard</title>
+  <style>
+    body { font-family: Arial, sans-serif; background: #f9fafc; margin: 0; padding: 0; }
+    header { background: #2c3e50; color: white; padding: 15px; text-align: center; }
+    nav { display: flex; justify-content: center; background: #34495e; }
+    nav a { padding: 12px 20px; color: white; text-decoration: none; }
+    nav a:hover { background: #2c3e50; }
+    .container { padding: 20px; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+    .card { background: white; padding: 20px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+    h2 { margin-top: 0; color: #2c3e50; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1 id="ngoName">NGO Dashboard</h1>
+  </header>
+
+  <nav>
+    <a href="dashboard.html">Home</a>
+    <a href="performance.html">NGO Performance</a>
+    <a href="campaign.html">Campaign Alert</a>
+    <a href="patients.html">Patient List</a>
+  </nav>
+
+  <div class="container">
+    <h2>Welcome to the NGO Dashboard</h2>
+    <p>Track campaigns, manage emergencies, and support patients in need.</p>
+    <div class="card-grid">
+      <div class="card"><h2>Local Health Map</h2><p>[API: Local health data]</p></div>
+      <div class="card"><h2>Emergency Cases</h2><p>[API: Emergency response]</p></div>
+      <div class="card"><h2>User Management</h2><p>[API: NGO User & Role Management]</p></div>
+      <div class="card"><h2>Campaign Alert</h2><p>Plan & manage campaigns</p></div>
+      <div class="card"><h2>Performance List</h2><p>See NGO rankings</p></div>
+    </div>
+  </div>
+
+  <script>
+    // Fetch NGO name from localStorage (set after login)
+    const ngoName = localStorage.getItem("ngoName");
+    if (ngoName) {
+      document.getElementById("ngoName").textContent = ngoName + " - Dashboard";
+    }
+  </script>
+</body>
+</html>

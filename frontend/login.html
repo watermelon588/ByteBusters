@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NGO Login</title>
+</head>
+<body>
+  <h2>NGO Login</h2>
+  <form id="loginForm">
+    <label>NGO UID</label>
+    <input type="text" id="uid" required><br>
+
+    <label>Password</label>
+    <input type="password" id="password" required><br>
+
+    <label>Position</label>
+    <select id="position" required>
+      <option value="Secretary">Secretary</option>
+      <option value="President">President</option>
+      <option value="Vice President">Vice President</option>
+    </select><br><br>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Not registered? <a href="register.html">Register here</a></p>
+
+  <script>
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const uid = document.getElementById("uid").value;
+      const password = document.getElementById("password").value;
+      const position = document.getElementById("position").value;
+
+      const res = await fetch("http://localhost:5000/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ uid, password, position })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        localStorage.setItem("ngoUser", JSON.stringify(data.user));
+        window.location.href = "dashboard.html";
+      } else {
+        alert("Error: " + data.message);
+      }
+    });
+  </script>
+</body>
+</html>
