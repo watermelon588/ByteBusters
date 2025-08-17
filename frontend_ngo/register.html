@@ -28,16 +28,16 @@
     <form id="regForm">
       <div class="grid">
         <label>NGO Name
-          <input type="text" name="ngoName" required>
+          <input type="text" name="ngoName" placeholder="Enter NGO Name" required>
         </label>
         <label>NGO UID (for login)
-          <input type="text" name="uid" required>
+          <input type="text" name="uid" placeholder="Enter NGO UID" required>
         </label>
         <label>Contact Person
-          <input type="text" name="contactPerson" required>
+          <input type="text" name="contactPerson" placeholder="Enter Contact Person Name" required>
         </label>
         <label>Position
-          <select name="position" required>
+          <select name="position"  required>
             <option value="">-- Select --</option>
             <option>Secretary</option>
             <option>President</option>
@@ -45,13 +45,13 @@
           </select>
         </label>
         <label>Email
-          <input type="email" name="email" required>
+          <input type="email" name="email" placeholder="Enter Email" required>
         </label>
         <label>Location
-          <input type="text" name="location" required>
+          <input type="text" name="location" placeholder="Enter Location" required>
         </label>
         <label class="full">Password
-          <input type="password" name="password" required>
+          <input type="password" name="password" placeholder="Enter Password" required>
         </label>
       </div>
       <button class="btn" type="submit">Register</button>
@@ -60,7 +60,7 @@
   </div>
 
   <script>
-    const API_BASE = 'http://localhost:5000/api';
+    const API_BASE = 'http://localhost:5000';
 
     document.getElementById('regForm').addEventListener('submit', async (e)=>{
       e.preventDefault();

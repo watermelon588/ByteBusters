@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>JeevaCare — Healthcare Management (HTML/CSS/JS)</title>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root{
+      --bg:#f8fafc; /* gray-50 */
+      --card:#ffffff; /* white */
+      --muted:#64748b; /* slate-500 */
+      --text:#0f172a; /* slate-900 */
+      --blue:#3b82f6; /* blue-500 */
+      --blue-600:#2563eb; /* blue-600 */
+      --green:#16a34a; /* green-600 */
+      --green-700:#15803d; /* green-700 */
+      --orange:#f97316; /* orange-500 */
+      --purple:#7c3aed; /* purple-600 */
+      --red:#ef4444; /* red-500 */
+      --gray:#475569; /* slate-600 */
+      --ring: 0 0 0 3px rgba(59,130,246,.25);
+      --radius: 16px;
+      --shadow: 0 10px 30px rgba(2,6,23,.08);
+      --shadow-sm: 0 4px 14px rgba(2,6,23,.06);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0;background:var(--bg);color:var(--text);font:16px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji"}
+    a{color:inherit}
+    .container{max-width:1200px;margin:0 auto;padding:24px}
+    .header{background:#fff;border-bottom:3px solid var(--blue);box-shadow:var(--shadow-sm)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 24px;max-width:1200px;margin:0 auto}
+    .brand{display:flex;align-items:center;gap:12px}
+    .brand-badge{width:40px;height:40px;border-radius:999px;background:var(--blue);display:grid;place-items:center;color:#fff}
+    .h1{font-size:24px;font-weight:800}
+    .row{display:grid;gap:24px}
+    @media(min-width:768px){.row.cols-2{grid-template-columns:1fr 1fr}.row.cols-3{grid-template-columns:repeat(3,1fr)}.row.cols-4{grid-template-columns:repeat(4,1fr)}}
+    .card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:24px}
+    .card.hover:hover{box-shadow:0 16px 40px rgba(2,6,23,.12);transform:translateY(-2px);transition:.25s}
+    .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:10px 16px;border-radius:12px;border:0;cursor:pointer;font-weight:600;transition:.2s;box-shadow:var(--shadow-sm)}
+    .btn.primary{background:var(--blue);color:#fff}
+    .btn.primary:hover{background:var(--blue-600)}
+    .btn.green{background:var(--green);color:#fff}
+    .btn.green:hover{background:var(--green-700)}
+    .btn.gray{background:#475569;color:#fff}
+    .btn.gray:hover{background:#334155}
+    .btn.orange{background:var(--orange);color:#fff}
+    .btn.purple{background:var(--purple);color:#fff}
+    .btn.ghost{background:transparent;color:var(--gray);box-shadow:none}
+    .stat{display:grid;gap:6px;text-align:center}
+    .stat .num{font-weight:800;font-size:28px}
+    .muted{color:var(--muted)}
+    .pill{padding:4px 10px;border-radius:999px;font-size:12px;font-weight:700;display:inline-block}
+    .pill.green{background:#dcfce7;color:#166534}
+    .pill.yellow{background:#fef9c3;color:#854d0e}
+    .pill.gray{background:#e5e7eb;color:#374151}
+    .pill.red{background:#fee2e2;color:#991b1b}
+    .pill.blue{background:#dbeafe;color:#1e40af}
+    .list-item{border:1px solid #e2e8f0;border-radius:12px;padding:16px}
+    .list-item + .list-item{margin-top:12px}
+    .list-title{display:flex;align-items:flex-start;justify-content:space-between}
+    .flex{display:flex;align-items:center;gap:12px}
+    .flex-between{display:flex;align-items:center;justify-content:space-between}
+    .grid{display:grid;gap:12px}
+    .search-row{display:flex;gap:8px;flex-wrap:wrap}
+    input[type="text"], input[type="password"], select{width:100%;padding:10px 12px;border:1px solid #cbd5e1;border-radius:12px;outline:none}
+    input:focus, select:focus{box-shadow:var(--ring);border-color:var(--blue)}
+    .center{display:grid;place-items:center;min-height:calc(100vh - 70px)}
+    .login-card{width:100%;max-width:420px}
+    .badge-left{border-left:4px solid var(--orange);background:#fff7ed;border-radius:12px;padding:12px 16px}
+    .pulse{width:10px;height:10px;border-radius:999px;background:var(--red);box-shadow:0 0 0 0 rgba(239,68,68,.6);animation:pulse 2s infinite}
+    @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(239,68,68,.6)}70%{box-shadow:0 0 0 12px rgba(239,68,68,0)}100%{box-shadow:0 0 0 0 rgba(239,68,68,0)}}
+    .hidden{display:none !important}
+    .modal{position:fixed;inset:0;background:rgba(15,23,42,.6);display:grid;place-items:center;padding:24px}
+    .modal > .card{max-width:560px;width:100%}
+    .table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    .table td{background:#fff;padding:14px 16px}
+    .table .row{background:#fff;border-radius:12px;}
+    /* Ratings */
+    .stars{font-size:14px;letter-spacing:1px}
+    .star-on{color:#f59e0b}
+    .star-off{color:#cbd5e1}
+  </style>
+</head>
+<body>
+  <!-- App Root -->
+  <header class="header" id="app-header">
+    <div class="header-inner">
+      <div class="brand">
+        <div class="brand-badge"><i data-lucide="activity"></i></div>
+        <div class="h1">JeevaCare</div>
+      </div>
+      <div class="flex" id="header-actions">
+        <!-- Filled dynamically based on view -->
+      </div>
+    </div>
+  </header>
+
+  <main id="app" class="container"></main>
+
+  <!-- Modals -->
+  <div id="modal-root" class="hidden"></div>
+
+  <script>
+  // --- State ---
+  const state = {
+    currentView: 'home',
+    userType: null, // 'doctor' | 'hospital'
+    loginData: { username: '', password: '' },
+
+    // Sample consultations (added a few more so filtering feels real)
+    consultations: [
+      { id: 1, patientName: 'John Doe', doctor: 'Dr. Smith', date: '2025-08-17', time: '10:00 AM', type: 'General', status: 'confirmed' },
+      { id: 2, patientName: 'Jane Wilson', doctor: 'Dr. Johnson', date: '2025-08-17', time: '2:30 PM', type: 'Cardiology', status: 'pending' },
+      { id: 3, patientName: 'Mike Brown', doctor: 'Dr. Davis', date: '2025-08-18', time: '9:15 AM', type: 'Pediatrics', status: 'completed' },
+      { id: 4, patientName: 'Priya Nair', doctor: 'Dr. Nguyen', date: '2025-08-18', time: '11:45 AM', type: 'Dermatology', status: 'confirmed' },
+      { id: 5, patientName: 'Carlos Mendez', doctor: 'Dr. Patel', date: '2025-08-19', time: '4:10 PM', type: 'Orthopedics', status: 'pending' },
+      { id: 6, patientName: 'Ava Thompson', doctor: 'Dr. Davis', date: '2025-08-19', time: '8:30 AM', type: 'General', status: 'confirmed' },
+      { id: 7, patientName: 'Liam Chen', doctor: 'Dr. Johnson', date: '2025-08-20', time: '1:20 PM', type: 'Cardiology', status: 'completed' },
+      { id: 8, patientName: 'Sofia Rossi', doctor: 'Dr. Smith', date: '2025-08-20', time: '10:50 AM', type: 'Neurology', status: 'pending' },
+      { id: 9, patientName: 'Ethan Parker', doctor: 'Dr. Nguyen', date: '2025-08-21', time: '3:40 PM', type: 'ENT', status: 'confirmed' },
+      { id: 10, patientName: 'Mia Johnson', doctor: 'Dr. Patel', date: '2025-08-21', time: '9:05 AM', type: 'General', status: 'completed' }
+    ],
+
+    emergencyRequests: [
+      { id: 1, patientName: 'Sarah Connor', location: 'Downtown Medical Center', issue: 'Chest Pain', priority: 'high', time: '5 min ago', status: 'active' },
+      { id: 2, patientName: 'Tom Anderson', location: 'City Hospital', issue: 'Accident', priority: 'critical', time: '12 min ago', status: 'responded' },
+      { id: 3, patientName: 'Ravi Kumar', location: 'East Wing', issue: 'Seizure', priority: 'high', time: '25 min ago', status: 'active' }
+    ],
+
+    doctorReports: [
+      { id: 1, patientName: 'Alice Johnson', condition: 'Hypertension', status: 'Under Review', date: '2025-08-15', severity: 'moderate', notes: '' },
+      { id: 2, patientName: 'Bob Smith', condition: 'Diabetes', status: 'Serious', date: '2025-08-14', severity: 'high', notes: '' },
+      { id: 3, patientName: 'Carol Brown', condition: 'Migraine', status: 'Treated', date: '2025-08-13', severity: 'low', notes: '' },
+      { id: 4, patientName: 'Daniel Lee', condition: 'Asthma', status: 'Under Review', date: '2025-08-15', severity: 'moderate', notes: '' },
+      { id: 5, patientName: 'Emily Davis', condition: 'Anemia', status: 'Treated', date: '2025-08-12', severity: 'low', notes: '' }
+    ],
+
+    // Feedback now includes timestamps (createdAt). Kept original dates visible too.
+    feedbackCases: [
+      { id: 1, patientName: 'John Doe', feedback: 'Very satisfied with treatment', rating: 5, date: '2025-08-16', type: 'positive', createdAt: '2025-08-16T14:05:00Z' },
+      { id: 2, patientName: 'Jane Wilson', feedback: 'Long waiting time', rating: 3, date: '2025-08-15', type: 'neutral', createdAt: '2025-08-15T09:32:00Z' },
+      { id: 3, patientName: 'Mike Davis', feedback: 'Excellent care and follow-up', rating: 5, date: '2025-08-14', type: 'positive', createdAt: '2025-08-14T18:47:00Z' },
+      { id: 4, patientName: 'Priyanka Singh', feedback: 'Doctor explained everything clearly.', rating: 4, date: '2025-08-17', type: 'positive', createdAt: '2025-08-17T07:20:00Z' },
+      { id: 5, patientName: 'Omar Ali', feedback: 'Pharmacy was out of stock.', rating: 2, date: '2025-08-17', type: 'neutral', createdAt: '2025-08-17T11:55:00Z' },
+      { id: 6, patientName: 'Lena Fischer', feedback: 'Smooth check-in, friendly staff.', rating: 5, date: '2025-08-18', type: 'positive', createdAt: '2025-08-18T08:10:00Z' },
+      { id: 7, patientName: 'Zhang Wei', feedback: 'Billing took too long.', rating: 3, date: '2025-08-18', type: 'neutral', createdAt: '2025-08-18T13:42:00Z' }
+    ],
+
+    campaigns: [
+      { id: 1, title: 'COVID-19 Vaccination Drive', date: 'Aug 20-25, 2025', location: 'Community Center' },
+      { id: 2, title: 'Free Health Checkup Camp', date: 'Aug 30, 2025', location: 'City Park' }
+    ],
+
+    filters: { search: '', status: 'all' },
+    availability: { isAvailable: false }
+  };
+
+  // --- Utilities ---
+  const $ = (sel,root=document) => root.querySelector(sel);
+  const $$ = (sel,root=document) => [...root.querySelectorAll(sel)];
+  function setView(view){ state.currentView = view; render(); }
+  function openModal(content){ const root = document.getElementById('modal-root'); root.classList.remove('hidden'); root.classList.add('modal'); root.innerHTML = `<div class="card">${content}</div>`; lucide.createIcons(); }
+  function closeModal(){ const root = document.getElementById('modal-root'); root.classList.add('hidden'); root.classList.remove('modal'); root.innerHTML = ''; }
+  function pill(cls, text){ return `<span class="pill ${cls}">${text}</span>` }
+  function icon(name, size=20){ return `<i data-lucide="${name}" style="width:${size}px;height:${size}px"></i>` }
+
+  // Format absolute timestamp to "x min ago" etc. Fallback to absolute time.
+  function formatRelativeTime(iso){
+    try{
+      const then = new Date(iso);
+      const now = new Date();
+      const diffMs = now - then;
+      if(isNaN(diffMs)) return '';
+      const sec = Math.round(diffMs/1000);
+      if(sec < 60) return `${sec}s ago`;
+      const min = Math.round(sec/60);
+      if(min < 60) return `${min}m ago`;
+      const hrs = Math.round(min/60);
+      if(hrs < 24) return `${hrs}h ago`;
+      const days = Math.round(hrs/24);
+      if(days < 7) return `${days}d ago`;
+      const weeks = Math.round(days/7);
+      if(weeks < 5) return `${weeks}w ago`;
+      const months = Math.round(days/30);
+      if(months < 12) return `${months}mo ago`;
+      const years = Math.round(days/365);
+      return `${years}y ago`;
+    }catch(e){ return ''; }
+  }
+
+  function formatClockTime(iso){
+    try{
+      const d = new Date(iso);
+      const hh = d.getHours();
+      const mm = d.getMinutes().toString().padStart(2,'0');
+      const ampm = hh >= 12 ? 'PM' : 'AM';
+      const h12 = ((hh + 11) % 12) + 1;
+      return `${h12}:${mm} ${ampm}`;
+    }catch(e){ return ''; }
+  }
+
+  // --- Header Actions ---
+  function renderHeader(){
+    const actions = document.getElementById('header-actions');
+    actions.innerHTML = '';
+    if(state.currentView === 'home'){
+      actions.innerHTML = `
+        <button class="btn green" id="to-doctor">${icon('user')} Doctor SignUp</button>
+        <button class="btn gray" id="to-hospital">${icon('building-2')} Hospital Login</button>`;
+      $('#to-doctor').onclick = ()=> setView('doctorLogin');
+      $('#to-hospital').onclick = ()=> setView('hospitalLogin');
+    } else {
+      actions.innerHTML = `
+        <button class="btn ghost" id="back-home">${icon('home')} Home</button>
+        <button class="btn ghost" id="logout">${icon('log-out')} Logout</button>`;
+      $('#back-home').onclick = ()=>{ state.userType=null; setView('home'); };
+      $('#logout').onclick = ()=>{ state.userType=null; setView('home'); };
+    }
+  }
+
+  // --- Views ---
+  function Home(){
+    return `
+      <section class="container">
+        <div class="grid" style="gap:36px; text-align:center; margin-top:24px">
+          <div>
+            <h2 style="font-size:32px; font-weight:800; margin:0 0 8px">Healthcare Management Platform</h2>
+            <p class="muted" style="font-size:18px">Professional healthcare dashboard for doctors and hospitals</p>
+          </div>
+          <div class="row cols-2">
+            <div class="card hover">
+              <div class="grid" style="place-items:center">
+                <div class="brand-badge" style="background:#dcfce7;color:#16a34a">${icon('user',28)}</div>
+                <h3 style="margin:12px 0 6px">Doctor Portal</h3>
+                <p class="muted">Access doctor dashboard with patient reports and consultations</p>
+                <button class="btn green" onclick="setView('doctorLogin')">${icon('user')} Doctor SignUp</button>
+              </div>
+            </div>
+            <div class="card hover">
+              <div class="grid" style="place-items:center">
+                <div class="brand-badge" style="background:#f1f5f9;color:#334155">${icon('building-2',28)}</div>
+                <h3 style="margin:12px 0 6px">Hospital Management</h3>
+                <p class="muted">Hospital administration and emergency services management</p>
+                <button class="btn gray" onclick="setView('hospitalLogin')">${icon('log-in')} Hospital Login</button>
+              </div>
+            </div>
+          </div>
+          <div class="card">
+            <h3 class="flex" style="font-weight:800">${icon('bell',24)} Active Health Campaigns</h3>
+            <div class="row cols-2" style="margin-top:16px">
+              ${state.campaigns.map(c=>`
+                <div class="badge-left">
+                  <div style="font-weight:700">${c.title}</div>
+                  <div class="muted" style="font-size:14px">${c.date}</div>
+                  <div class="muted" style="font-size:14px">${c.location}</div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function Login(type){
+    return `
+      <section class="center">
+        <div class="card login-card">
+          <div class="grid" style="place-items:center; gap:8px; margin-bottom:12px">
+            <div class="brand-badge" style="background:var(--blue);color:#fff">${icon(type==='hospital'?'building-2':'user',28)}</div>
+            <h2 style="margin:8px 0 0">${type==='hospital'?'Hospital Portal':'Doctor Portal'}</h2>
+          </div>
+          <div class="grid" style="gap:12px">
+            <div>
+              <label class="muted" style="font-size:14px">Username</label>
+              <input type="text" id="login-username" placeholder="Enter your username" value="${state.loginData.username}"/>
+            </div>
+            <div>
+              <label class="muted" style="font-size:14px">Password</label>
+              <input type="password" id="login-password" placeholder="Enter your password" value="${state.loginData.password}"/>
+            </div>
+            <button class="btn primary" id="login-btn">${icon('log-in')} Login</button>
+            <button class="btn ghost" onclick="setView('home')">${icon('arrow-left')} Back to Home</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function DoctorDashboard(){
+    const stats = [
+      {num:28,label:'Total Patients', color:'blue'},
+      {num:12,label:'Consultations Today', color:'green'},
+      {num:3,label:'Serious Cases', color:'orange'},
+      {num:'4.8',label:'Average Rating', color:'purple'}
+    ];
+    return `
+      <section class="container" style="margin-top:16px">
+        <div class="row cols-4" style="margin-bottom:16px">
+          <button class="btn green">${icon('check-circle')} Action Button</button>
+          <button class="btn primary" id="btn-review-reports">${icon('file-text')} Review Reports</button>
+          <button class="btn orange">${icon('bell')} Campaign Info</button>
+          <button class="btn purple">${icon('users')} Suggest Doctors</button>
+        </div>
+
+        <div class="row cols-2">
+          <div class="card">
+            <div class="flex-between" style="margin-bottom:12px">
+              <h3 style="font-weight:800">Patient Reports</h3>
+              <div class="flex">
+                <button class="btn primary" id="btn-give-suggestion">Give Suggestions</button>
+                <button class="btn" style="background:var(--red);color:#fff" id="btn-mark-serious">Mark Serious</button>
+              </div>
+            </div>
+            <div id="doctor-reports">
+              ${state.doctorReports.map(r=>DoctorReportItem(r)).join('')}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="flex-between" style="margin-bottom:12px">
+              <h3 style="font-weight:800">Patient Feedback</h3>
+              <button class="btn primary" id="view-all-feedback">View All</button>
+            </div>
+            <div>
+              ${state.feedbackCases.slice(0,4).map(f=>FeedbackItem(f)).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="row cols-3" style="margin-top:16px">
+          <div class="card">
+            <div class="flex">${icon('calendar',24)} <h3>Schedule Management</h3></div>
+            <p class="muted">Manage your consultation schedule and availability</p>
+            <div class="grid">
+              <button class="btn primary" id="btn-attend">Attend Scheduled Consult</button>
+              <button class="btn green" id="btn-availability">${state.availability.isAvailable? 'Disable Availability' : 'Set Availability'}</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="flex">${icon('bell',24)} <h3>Campaign Participation</h3></div>
+            <p class="muted">Join and manage health awareness campaigns</p>
+            <div class="grid">
+              <button class="btn orange">Attend Campaign</button>
+              <button class="btn purple">View Campaign Info</button>
+            </div>
+          </div>
+          <div class="card">
+            <div class="flex">${icon('users',24)} <h3>Professional Network</h3></div>
+            <p class="muted">Connect with other medical professionals</p>
+            <div class="grid">
+              <button class="btn green">Suggest Other Doctors</button>
+              <button class="btn primary">Professional Network</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="row cols-4" style="margin-top:16px">
+          ${stats.map(s=>`<div class="card stat"><div class="num" style="color:var(--${s.color})">${s.num}</div><div class="muted">${s.label}</div></div>`).join('')}
+        </div>
+      </section>
+    `;
+  }
+
+  function DoctorReportItem(report){
+    const statusPill = report.status==='Serious'? 'red' : (report.status==='Under Review'? 'yellow' : 'green');
+    const sevPill = report.severity==='high'? 'red' : (report.severity==='moderate'? 'yellow' : 'green');
+    return `
+      <div class="list-item">
+        <div class="list-title">
+          <div>
+            <div style="font-weight:700">${report.patientName}</div>
+            <div class="muted" style="font-size:14px">${report.condition}</div>
+          </div>
+          ${pill(statusPill, report.status)}
+        </div>
+        <div class="flex-between" style="margin-top:6px">
+          <div class="flex muted" style="font-size:14px">
+            ${icon('calendar',16)} ${report.date}
+            ${pill(sevPill, report.severity)}
+          </div>
+          <div class="flex">
+            <button class="btn ghost" onclick="alert('Joining consult for ${report.patientName}')">Attend Consult</button>
+            <button class="btn ghost" onclick="alert('Scheduling follow-up for ${report.patientName}')">Schedule</button>
+          </div>
+        </div>
+        ${report.notes? `<div style="margin-top:8px; font-size:14px"><strong>Notes:</strong> ${report.notes}</div>`: ''}
+      </div>
+    `;
+  }
+
+  // Feedback item now shows timestamp chips (absolute time + relative)
+  function FeedbackItem(f){
+    const border = f.type==='positive'? '4px solid #22c55e' : (f.type==='neutral'? '4px solid #eab308' : '4px solid #ef4444');
+    const timeChip = f.createdAt ? `
+      <div class="flex" style="gap:8px; align-items:center;">
+        <span class="pill gray" title="${f.createdAt}">${icon('clock',14)} ${formatClockTime(f.createdAt)}</span>
+        <span class="pill blue" title="${f.createdAt}">${formatRelativeTime(f.createdAt)}</span>
+      </div>` : '';
+    return `
+      <div class="list-item" style="border-left:${border}">
+        <div class="list-title">
+          <div>
+            <div style="font-weight:700">${f.patientName}</div>
+            <div class="stars">
+              ${'★'.repeat(f.rating).split('').map(s=>`<span class="star-on">${s}</span>`).join('')}
+              ${'★'.repeat(5-f.rating).split('').map(s=>`<span class="star-off">${s}</span>`).join('')}
+              <span class="muted">(${f.rating}/5)</span>
+            </div>
+          </div>
+          <div class="grid" style="justify-items:end;">
+            <div class="muted" style="font-size:12px">${f.date}</div>
+            ${timeChip}
+          </div>
+        </div>
+        <p style="font-size:14px">${f.feedback}</p>
+        <button class="btn ghost" onclick="alert('Contacting ${f.patientName}...')">Contact Reporter</button>
+      </div>
+    `;
+  }
+
+  function HospitalDashboard(){
+    const search = state.filters.search.toLowerCase();
+    const statusFilter = state.filters.status;
+    const filtered = state.consultations.filter(c => {
+      const matchesText = [c.patientName, c.doctor, c.type].some(v=>v.toLowerCase().includes(search));
+      const matchesStatus = statusFilter==='all' || c.status===statusFilter;
+      return matchesText && matchesStatus;
+    });
+
+    return `
+      <section class="container" style="margin-top:16px">
+        <div class="row cols-4" style="margin-bottom:16px">
+          ${StatCard('Total Consultations','124','blue','calendar')}
+          ${StatCard('Emergency Cases','8','red','alert-triangle')}
+          ${StatCard('Active Doctors','15','green','users')}
+          ${StatCard('Bed Occupancy','78%','orange','activity')}
+        </div>
+
+        <div class="row cols-2">
+          <div class="card">
+            <div class="flex-between" style="margin-bottom:8px">
+              <h3 style="font-weight:800">Today's Consultations</h3>
+              <button class="btn primary" id="btn-add-consult">${icon('plus',18)} Add New</button>
+            </div>
+            <div class="search-row" style="margin-bottom:8px">
+              <div style="flex:1; min-width:220px" class="flex"><span>${icon('search')}</span><input type="text" id="consult-search" placeholder="Search name, doctor, type" value="${state.filters.search}"></div>
+              <select id="consult-status" style="width:180px">
+                <option value="all" ${state.filters.status==='all'?'selected':''}>All Status</option>
+                <option value="confirmed" ${state.filters.status==='confirmed'?'selected':''}>Confirmed</option>
+                <option value="pending" ${state.filters.status==='pending'?'selected':''}>Pending</option>
+                <option value="completed" ${state.filters.status==='completed'?'selected':''}>Completed</option>
+              </select>
+            </div>
+            <div id="consult-list">
+              ${filtered.map(c=>ConsultationItem(c)).join('') || `<div class="muted">No consultations found.</div>`}
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="flex-between" style="margin-bottom:8px">
+              <h3 style="font-weight:800">Emergency Requests</h3>
+              <div class="flex" style="gap:8px"><div class="pulse"></div><span class="muted" style="font-size:14px">Live Updates</span></div>
+            </div>
+            <div>
+              ${state.emergencyRequests.map(e=>EmergencyItem(e)).join('')}
+            </div>
+          </div>
+        </div>
+
+        <div class="row cols-3" style="margin-top:16px">
+          <div class="card">
+            <div class="flex">${icon('file-text',24)} <h3>Patient Records</h3></div>
+            <p class="muted">Access and manage patient medical records</p>
+            <button class="btn primary" onclick="alert('Opening patient records...')">View Records</button>
+          </div>
+          <div class="card">
+            <div class="flex">${icon('activity',24)} <h3>Track Previous Cases</h3></div>
+            <p class="muted">Monitor and track patient case histories and outcomes</p>
+            <button class="btn purple" onclick="alert('Tracking cases...')">Track Cases</button>
+          </div>
+          <div class="card">
+            <div class="flex">${icon('settings',24)} <h3>Hospital Settings</h3></div>
+            <p class="muted">Configure hospital preferences and settings</p>
+            <button class="btn gray" onclick="alert('Opening settings...')">Settings</button>
+          </div>
+        </div>
+      </section>
+    `;
+  }
+
+  function StatCard(label, num, color, iconName){
+    return `<div class="card"><div class="flex-between"><div><div class="muted" style="font-size:14px">${label}</div><div class="num" style="color:var(--${color}); font-size:32px">${num}</div></div>${icon(iconName,40)}</div></div>`
+  }
+
+  function ConsultationItem(c){
+    const statusCls = c.status==='confirmed'? 'green' : (c.status==='pending' ? 'yellow' : 'gray');
+    return `
+      <div class="list-item">
+        <div class="list-title">
+          <div>
+            <div style="font-weight:700">${c.patientName}</div>
+            <div class="muted" style="font-size:14px">${c.doctor}</div>
+          </div>
+          ${pill(statusCls, c.status)}
+        </div>
+        <div class="flex muted" style="font-size:14px; margin-top:6px">
+          ${icon('calendar',16)} ${c.date}
+          ${icon('clock',16)} ${c.time}
+          ${pill('blue', c.type)}
+        </div>
+        <div class="flex" style="justify-content:flex-end; margin-top:8px; gap:8px">
+          <select onchange="updateConsultStatus(${c.id}, this.value)">
+            <option value="confirmed" ${c.status==='confirmed'?'selected':''}>Confirmed</option>
+            <option value="pending" ${c.status==='pending'?'selected':''}>Pending</option>
+            <option value="completed" ${c.status==='completed'?'selected':''}>Completed</option>
+          </select>
+          <button class="btn ghost" onclick="alert('Calling ${c.patientName} ...')">${icon('phone')} Call</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function EmergencyItem(e){
+    const border = e.priority==='critical'? '#ef4444' : (e.priority==='high'? '#f97316' : '#eab308');
+    const statusP = e.status==='active'? 'red' : 'green';
+    return `
+      <div class="list-item" style="border-left:4px solid ${border}; background:${border}10">
+        <div class="list-title">
+          <div>
+            <div style="font-weight:700">${e.patientName}</div>
+            <div class="muted" style="font-size:14px">${icon('map-pin',16)} ${e.location}</div>
+          </div>
+          ${pill(statusP, e.status)}
+        </div>
+        <div class="flex-between" style="margin-top:6px">
+          <div>
+            <div style="font-weight:600">${e.issue}</div>
+            <div class="muted" style="font-size:12px">${e.time}</div>
+          </div>
+          <button class="btn ${e.status==='active'?'':'green'}" style="background:${e.status==='active'? 'var(--red)':'var(--green)'}; color:#fff" onclick="toggleEmergency(${e.id})">${e.status==='active'?'Respond':'Responded'}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  // --- Actions / Handlers ---
+  function wireEvents(){
+    // Login
+    if(state.currentView==='doctorLogin' || state.currentView==='hospitalLogin'){
+      const type = state.currentView==='doctorLogin'? 'doctor' : 'hospital';
+      $('#login-btn').onclick = ()=>{
+        const username = $('#login-username').value.trim();
+        const password = $('#login-password').value.trim();
+        state.loginData = { username, password };
+        if(!username || !password){ alert('Please enter username and password'); return; }
+        state.userType = type;
+        setView(type==='doctor' ? 'doctorDashboard' : 'hospitalDashboard');
+      }
+    }
+
+    // Doctor actions
+    if(state.currentView==='doctorDashboard'){
+      $('#btn-review-reports').onclick = ()=>{
+        openModal(`
+          <h3 style="margin-top:0">Report Center</h3>
+          <p class="muted">Quickly review and annotate patient reports.</p>
+          <div class="grid">${state.doctorReports.map(r=>`<label style=\"display:flex;gap:8px;align-items:center\"><input type=\"checkbox\" ${r.status==='Under Review'?'checked':''} onchange=\"toggleUnderReview(${r.id},this.checked)\"> ${r.patientName} — <span class=\"muted\">${r.condition}</span></label>`).join('')}</div>
+          <div class="flex" style="justify-content:flex-end; margin-top:12px"><button class="btn primary" onclick="closeModal()">Done</button></div>
+        `);
+      }
+      $('#btn-give-suggestion').onclick = ()=>{
+        openModal(`
+          <h3 style="margin-top:0">Add Suggestions</h3>
+          <div class="grid">
+            <label>Select Report
+              <select id="suggest-report">${state.doctorReports.map(r=>`<option value="${r.id}">${r.patientName} — ${r.condition}</option>`).join('')}</select>
+            </label>
+            <label>Notes
+              <textarea id="suggest-notes" rows="4" style="width:100%; padding:10px; border:1px solid #cbd5e1; border-radius:12px"></textarea>
+            </label>
+          </div>
+          <div class="flex" style="justify-content:flex-end; margin-top:12px">
+            <button class="btn ghost" onclick="closeModal()">Cancel</button>
+            <button class="btn primary" onclick="saveSuggestion()">Save</button>
+          </div>
+        `);
+      }
+      $('#btn-mark-serious').onclick = ()=>{
+        const id = prompt('Enter Report ID to mark Serious (e.g., 1)');
+        if(!id) return; const r = state.doctorReports.find(x=>x.id==id);
+        if(!r) return alert('Report not found');
+        r.status='Serious'; r.severity='high'; render();
+      }
+      $('#btn-attend').onclick = ()=> alert('Opening video room...');
+      $('#btn-availability').onclick = ()=>{ state.availability.isAvailable = !state.availability.isAvailable; render(); };
+
+      // NEW: View all feedback in a modal (keeps page clean)
+      const viewAllBtn = $('#view-all-feedback');
+      if(viewAllBtn){
+        viewAllBtn.onclick = ()=>{
+          const list = state.feedbackCases
+            .map(f=>`
+              <div class="list-item" style="margin-top:8px">
+                <div class="flex-between">
+                  <div style="font-weight:700">${f.patientName}</div>
+                  <div class="flex" style="gap:8px">
+                    <span class="muted" style="font-size:12px">${f.date}</span>
+                    ${f.createdAt? `<span class="pill gray">${icon('clock',14)} ${formatClockTime(f.createdAt)}</span>
+                    <span class="pill blue">${formatRelativeTime(f.createdAt)}</span>`:''}
+                  </div>
+                </div>
+                <div class="stars" style="margin:6px 0">
+                  ${'★'.repeat(f.rating).split('').map(s=>`<span class="star-on">${s}</span>`).join('')}
+                  ${'★'.repeat(5-f.rating).split('').map(s=>`<span class="star-off">${s}</span>`).join('')}
+                  <span class="muted">(${f.rating}/5)</span>
+                </div>
+                <div class="muted" style="font-size:14px">${f.feedback}</div>
+              </div>
+            `).join('');
+          openModal(`
+            <h3 style="margin:0 0 8px 0">All Patient Feedback</h3>
+            <p class="muted" style="margin-top:0">Showing ${state.feedbackCases.length} entries</p>
+            <div class="grid" style="max-height:60vh; overflow:auto; padding-right:4px">
+              ${list}
+            </div>
+            <div class="flex" style="justify-content:flex-end; margin-top:12px">
+              <button class="btn primary" onclick="closeModal()">${icon('x')} Close</button>
+            </div>
+          `);
+        };
+      }
+    }
+
+    // Hospital actions
+    if(state.currentView==='hospitalDashboard'){
+      $('#btn-add-consult').onclick = openAddConsultModal;
+      $('#consult-search').oninput = (e)=>{ state.filters.search = e.target.value; render(); };
+      $('#consult-status').onchange = (e)=>{ state.filters.status = e.target.value; render(); };
+    }
+  }
+
+  // Doctor helpers
+  function toggleUnderReview(id, checked){
+    const r = state.doctorReports.find(x=>x.id===id);
+    if(!r) return; r.status = checked? 'Under Review' : 'Treated';
+  }
+  function saveSuggestion(){
+    const id = +$('#suggest-report').value; const notes = $('#suggest-notes').value.trim();
+    if(!notes){ alert('Please write some notes.'); return; }
+    const r = state.doctorReports.find(x=>x.id===id); if(!r) return;
+    r.notes = notes; closeModal(); render();
+  }
+
+  // Hospital helpers
+  function openAddConsultModal(){
+    openModal(`
+      <h3 style="margin-top:0">Add Consultation</h3>
+      <div class="grid" style="grid-template-columns:1fr 1fr; gap:12px">
+        <input id="c-name" placeholder="Patient Name">
+        <input id="c-doctor" placeholder="Doctor">
+        <input id="c-date" type="date">
+        <input id="c-time" type="time">
+        <input id="c-type" placeholder="Type (e.g., General)">
+        <select id="c-status">
+          <option value="confirmed">Confirmed</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+      </div>
+      <div class="flex" style="justify-content:flex-end; margin-top:12px">
+        <button class="btn ghost" onclick="closeModal()">Cancel</button>
+        <button class="btn primary" onclick="addConsultation()">Add</button>
+      </div>
+    `);
+  }
+  function addConsultation(){
+    const name=$('#c-name').value.trim();
+    const doctor=$('#c-doctor').value.trim();
+    const date=$('#c-date').value; const timeRaw=$('#c-time').value; const time = timeRaw? formatTime(timeRaw):'';
+    const type=$('#c-type').value.trim();
+    const status=$('#c-status').value;
+    if(!name||!doctor||!date||!time||!type){ alert('Please fill all fields'); return; }
+    const id = Math.max(0,...state.consultations.map(c=>c.id))+1;
+    state.consultations.unshift({id, patientName:name, doctor, date, time, type, status});
+    closeModal(); render();
+  }
+  function formatTime(t){
+    const [h,m] = t.split(':').map(Number); const ampm = h>=12? 'PM':'AM';
+    const hh = ((h+11)%12+1); return `${hh}:${String(m).padStart(2,'0')} ${ampm}`;
+  }
+  function updateConsultStatus(id, value){
+    const c = state.consultations.find(x=>x.id===id); if(!c) return; c.status = value; render();
+  }
+  function toggleEmergency(id){
+    const e = state.emergencyRequests.find(x=>x.id===id); if(!e) return; e.status = (e.status==='active'?'responded':'active'); render();
+  }
+
+  // --- Render ---
+  function render(){
+    renderHeader();
+    const root = document.getElementById('app');
+    let html = '';
+    if(state.currentView==='home') html = Home();
+    if(state.currentView==='doctorLogin') html = Login('doctor');
+    if(state.currentView==='hospitalLogin') html = Login('hospital');
+    if(state.currentView==='doctorDashboard') html = DoctorDashboard();
+    if(state.currentView==='hospitalDashboard') html = HospitalDashboard();
+    root.innerHTML = html;
+    lucide.createIcons();
+    wireEvents();
+  }
+
+  // Init
+  render();
+  </script>
+</body>
+</html>
