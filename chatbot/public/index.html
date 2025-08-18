@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Floating Chatbot</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+
+<!-- <style>
+  body { font-family: Arial, sans-serif; }
+  #chatbot-toggle {
+    position: fixed; bottom: 20px; right: 20px;
+    background: #4CAF50; color: white; border: none;
+    border-radius: 50%; width: 60px; height: 60px;
+    cursor: pointer; font-size: 24px;
+  }
+  #chatbot-box {
+    position: fixed; bottom: 90px; right: 20px;
+    width: 300px; max-height: 400px; background: white;
+    border-radius: 10px; border: 1px solid #ccc;
+    display: none; flex-direction: column; overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  #chatbot-messages {
+    flex: 1; padding: 10px; overflow-y: auto; font-size: 14px;
+  }
+  .chat-msg { margin-bottom: 10px; }
+  .user { text-align: right; color: blue; }
+  .bot { text-align: left; color: green; }
+  #chatbot-input { display: flex; border-top: 1px solid #ccc; }
+  #chatbot-input input {
+    flex: 1; padding: 8px; border: none; outline: none;
+  }
+  #chatbot-input button {
+    padding: 8px 12px; border: none;
+    background: #4CAF50; color: white; cursor: pointer;
+  }
+</style> -->
+</head>
+<body>
+
+<button id="chatbot-toggle">💬</button>
+
+<div id="chatbot-box">
+  <div id="chatbot-messages"></div>
+  <div id="chatbot-input">
+    <input type="text" id="chatbot-text" placeholder="Type a message...">
+    <button id="chatbot-send">Send</button>
+  </div>
+</div>
+ <!-- Top Navigation Bar -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <img src="./images/logo.png" alt="" style="height: 50px;">
+      <!-- <div class="logo">JeevaCare</div> -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a class="login-btn" href="#">Login</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h4>Connecting Communities to Better Health</h4>
+        <h1>Your Health, <span class="highlight">Our Priority</span></h1>
+        <p>Uniting healthcare providers, community workers, NGOs, and agencies to bring better health to every corner of
+          society.</p>
+        <div class="hero-buttons">
+          <a href="#" class="btn-primary">Get Started</a>
+          <a href="#" class="btn-secondary">Doctors</a>
+          <a href="#" class="btn-tertiery">NGO</a>
+        </div>
+      </div>
+      <div class="hero-image">
+        <img src="images/doctor1.jpg" alt="Doctor" width="550px">
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about">
+    <div class="container about-content">
+      <div class="about-image" style="display: inline-block;">
+        <img src="images/ngo1.jpg" alt="Healthcare Team">
+      </div>
+      <div class="about-text" ">
+        <h2>10+ Years of Expertise in Community Health</h2>
+        <p>We connect healthcare providers, NGOs, and communities with essential medical services, education, and support.</p>
+        <ul>
+          <li>✔ Real-time Health Data Tracking</li>
+          <li>✔ Free Online Consultations</li>
+          <li>✔ Community Health Campaigns</li>
+        </ul>
+        <a href=" #" class="btn-primary">Learn More</a>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- Services Section -->
+  <section class="services">
+    <div class="container">
+      <h2>Welcome to Jeevacare</h2>
+      <div class="service-grid">
+
+        <div class="service-card">
+          <div class="icon">🤖</div>
+          <h3>Report Health Issues</h3>
+          <p>Connect with our AI chatbot for instant health advice.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">💻</div>
+          <h3>Online Consultation</h3>
+          <p>Book and attend virtual doctor consultations.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon"><big> 📅</big></div>
+          <h3>Health Campaigns</h3>
+          <p>Find and join health events happening near you.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">💧</div>
+          <h3>Period Tracker</h3>
+          <p>Track your menstrual cycle and get reminders.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">🏥</div>
+          <h3>Nearest Hospital</h3>
+          <p>Find the closest hospital with directions.</p>
+        </div>
+
+        <div class="service-card">
+          <div class="icon">🚨</div>
+          <h3>Emergency SOS</h3>
+          <p>Send an instant emergency alert to contacts.</p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer>
+    <div class="container">
+      <p>© 2025 HH308 Health Platform. All rights reserved.</p>
+    </div>
+  </footer>
+
+<script>
+  const BACKEND_URL = "http://localhost:3000/chat"; // Change to your server URL
+
+  const toggleBtn = document.getElementById("chatbot-toggle");
+  const chatBox = document.getElementById("chatbot-box");
+  const messagesDiv = document.getElementById("chatbot-messages");
+  const sendBtn = document.getElementById("chatbot-send");
+  const inputField = document.getElementById("chatbot-text");
+
+  // toggleBtn.addEventListener("click", () => {
+  //   chatBox.style.display = chatBox.style.display === "flex" ? "none" : "flex";
+  // });
+
+  toggleBtn.addEventListener("click", () => {
+  const isVisible = chatBox.style.display === "flex";
+  chatBox.style.display = isVisible ? "none" : "flex";
+
+  // Show welcome message only the first time the chat is opened
+  if (!isVisible && messagesDiv.childElementCount === 0) {
+    addMessage("Hey! I'm here to help you out!", "bot");
+  }
+  });
+
+  sendBtn.addEventListener("click", sendMessage);
+  inputField.addEventListener("keypress", (e) => {
+    if (e.key === "Enter") sendMessage();
+  });
+
+  async function sendMessage() {
+    const userText = inputField.value.trim();
+    if (!userText) return;
+
+    addMessage(userText, "user");
+    inputField.value = "";
+
+    const thinkingId = addMessage("Thinking...", "bot");
+
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: userText })
+      });
+
+      const data = await response.json();
+      const botReply = data?.choices?.[0]?.message?.content || "Sorry, I didn't understand.";
+      updateMessage(thinkingId, botReply, "bot");
+
+    } catch (err) {
+      updateMessage(thinkingId, "Error: " + err.message, "bot");
+    }
+  }
+
+  // function addMessage(text, sender) {
+  //   const msg = document.createElement("div");
+  //   msg.classList.add("chat-msg", sender);
+  //   msg.textContent = text;
+  //   messagesDiv.appendChild(msg);
+  //   messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  //   return msg;
+  // }
+
+  function addMessage(text, sender) {
+  const msg = document.createElement("div");
+  msg.classList.add("chat-msg", sender);
+
+  // ✅ Render markdown so bold, italics, etc. work
+  msg.innerHTML = marked.parse(text);
+
+  messagesDiv.appendChild(msg);
+  messagesDiv.scrollTop = messagesDiv.scrollHeight;
+  return msg;
+  }
+
+  function updateMessage(msgElement, newText, sender) {
+    msgElement.innerHTML = marked.parse(newText);
+    msgElement.className = `chat-msg ${sender}`;
+  }
+</script>
+
+</body>
+</html>
