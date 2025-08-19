@@ -51,3 +51,28 @@ Flowchart: Collaborator GitHub Workflow
              │ git pull upstream   │
              │ main                │
              └─────────────────────┘
+
+Quickstart (Local)
+
+1) Prerequisites
+   - Node.js 18+
+   - MongoDB running locally (default URIs used)
+
+2) Start NGO backend (auth APIs at http://localhost:5000)
+   - cd ByteBusters/ngo-backend
+   - npm install
+   - npm run dev
+
+3) Start User API (feedback APIs at http://localhost:5001)
+   - cd ByteBusters/user_frontend
+   - npm install
+   - npm run dev
+
+4) Open the frontends directly in your browser
+   - NGO UI: `ByteBusters/frontend_ngo/index1.html` (then login/register)
+   - User UI: `ByteBusters/user_frontend/index.html` and `feedback.html`
+
+Notes
+- NGO frontend calls POST `http://localhost:5000/auth/register` and `http://localhost:5000/auth/login`
+- User feedback page calls `http://localhost:5001/api/feedback` (GET/POST)
+- Set env vars `MONGODB_URI`, `JWT_SECRET` as needed

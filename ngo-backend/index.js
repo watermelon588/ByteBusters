@@ -21,21 +21,14 @@ app.get("/", (req, res) => {
   res.send("NGO Backend is running 🚀");
 });
 
-// ✅ Use auth routes from auth.js
+// ✅ Use auth routes from auth.js (support both /auth and /api/auth for compatibility)
 const authRoutes = require("./routes/auth");
+app.use("/auth", authRoutes);
 app.use("/api/auth", authRoutes);
-
 
 // ✅ Start server
 const PORT = 5000;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
-});
-
-//temp
-app.post("/auth/register", (req, res) => {
-  console.log("📩 /auth/register route hit!");
-  const { username, password } = req.body;
-  res.json({ success: true, message: "User registered successfully" });
 });
 
