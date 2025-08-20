@@ -1,97 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Period Tracker</title>
-  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    :root {
+      --primary: #ff4da6;
+      --secondary: #ff80bf;
+      --fertile: #4db8ff;
+      --bg: #fff0f7;
+      --card-bg: #ffffff;
+      --text-dark: #333;
+      --text-light: #777;
+      --radius: 16px;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      background: var(--bg);
+      color: var(--text-dark);
+    }
+
+    header {
+      text-align: center;
+      padding: 1.2rem;
+      background: var(--primary);
+      color: white;
+      font-size: 1.3rem;
+      font-weight: bold;
+      border-bottom-left-radius: var(--radius);
+      border-bottom-right-radius: var(--radius);
+    }
+
+    .container {
+      padding: 1rem;
+      margin-bottom: 90px; /* space for footer */
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border-radius: var(--radius);
+      padding: 1.2rem;
+      margin-bottom: 1.2rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+
+    /* Calendar Styling */
+    .calendar h3 {
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+      color: var(--text-dark);
+      text-align: center;
+    }
+
+    .days {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 6px;
+      text-align: center;
+    }
+
+    .day {
+      padding: 10px;
+      border-radius: 8px;
+      background: #f8f8f8;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .day:hover { background: #eee; }
+
+    .day.today {
+      border: 2px solid var(--primary);
+      font-weight: bold;
+      background: #ffe6f2;
+    }
+
+    .day.period {
+      background: var(--secondary);
+      color: white;
+    }
+
+    .day.fertile {
+      background: var(--fertile);
+      color: white;
+    }
+
+    /* Stats */
+    .stats h3 {
+      text-align: center;
+      margin-bottom: 15px;
+    }
+
+    .progress-container {
+      width: 180px;
+      margin: auto;
+    }
+
+    .chart-subtitle {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-light);
+      margin-top: 8px;
+    }
+
+    /* Profile */
+    .profile p {
+      margin: 6px 0;
+      font-size: 0.95rem;
+      color: var(--text-dark);
+    }
+    .profile b { color: var(--primary); }
+
+    .insights h3 {
+      text-align: center;
+      margin-bottom: 10px;
+    }
+
+    canvas {
+      margin-top: 15px;
+      width: 100% !important;
+      height: auto !important;
+    }
+
+    /* Footer Navigation */
+    footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background: #fff;
+      display: flex;
+      justify-content: space-around;
+      padding: 0.7rem 0;
+      box-shadow: 0 -2px 6px rgba(0,0,0,0.1);
+    }
+
+    footer button {
+      background: none;
+      border: none;
+      font-size: 1.4rem;
+      cursor: pointer;
+      color: var(--text-light);
+      transition: color 0.2s;
+    }
+
+    footer button:hover { color: var(--primary); }
+
+    /* Responsive */
+    @media (max-width: 600px) {
+      header { font-size: 1.1rem; }
+      .progress-container { width: 140px; }
+      .day { font-size: 0.75rem; padding: 8px; }
+    }
+  </style>
 </head>
 <body>
-  <header class="topbar">
-    <div class="container topbar-inner">
-      <div><h2 class="title">Period Tracker</h2><div class="muted">Predict next period & fertile window</div></div>
-      <div><a class="btn btn-ghost" href="index.html">← Dashboard</a></div>
-    </div>
+  <header>
+    Period Tracker
   </header>
 
-  <main class="container">
-    <section class="panel">
-      <form id="periodForm">
-        <label class="label">First day of last period
-          <input id="lastPeriod" type="date" required />
-        </label>
-        <label class="label">Average cycle length (days)
-          <input id="cycleLength" type="number" min="21" max="40" value="28" required />
-        </label>
-        <div class="row" style="gap:10px;margin-top:12px;">
-          <button class="btn" type="submit">Predict</button>
-          <button id="clearBtn" class="btn btn-outline" type="button">Clear</button>
-        </div>
-      </form>
-    </section>
+  <div class="container">
+    <!-- Calendar -->
+    <div class="card calendar">
+      <h3>October 2025</h3>
+      <div class="days" id="days"></div>
+    </div>
 
-    <section id="resultsPanel" class="panel" style="display:none;">
-      <h3>Predictions</h3>
-      <p id="nextPeriodText" class="muted"></p>
-      <p id="fertileWindowText" class="muted"></p>
-      <div id="calendarPreview" style="margin-top:12px;display:flex;flex-wrap:wrap;gap:6px"></div>
-    </section>
-  </main>
+    <!-- Statistics -->
+    <div class="card stats">
+      <h3>Cycle Statistics</h3>
+      <div class="progress-container">
+        <canvas id="progressChart"></canvas>
+      </div>
+      <p style="text-align:center; margin-top:10px;" id="dayInfo">Day 0 of your cycle</p>
+      <p class="chart-subtitle">Shows your progress in the current cycle.</p>
+    </div>
 
-  <a class="sos-btn" href="#" id="sosBtnPeriod" title="Emergency SOS">SOS</a>
+    <!-- Insights -->
+    <div class="card insights">
+      <h3>Your Insights</h3>
+      <canvas id="moodChart"></canvas>
+      <p class="chart-subtitle">Mood trends tracked daily (scale 1–5).</p>
+      <canvas id="symptomChart"></canvas>
+      <p class="chart-subtitle">Cramps severity levels recorded over the week.</p>
+    </div>
 
-  <script src="script.js"></script>
+    <!-- Profile -->
+    <div class="card profile">
+      <h3>Profile</h3>
+      <p><b>Name:</b> Jane Doe</p>
+      <p><b>Email:</b> jane@example.com</p>
+      <p><b>Cycle Length:</b> 28 days</p>
+      <p><b>Period Length:</b> 5 days</p>
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <footer>
+    <button>🏠</button>
+    <button>💧</button>
+    <button>📅</button>
+    <button>👤</button>
+  </footer>
+
   <script>
-    function addDays(d, days){ const r=new Date(d); r.setDate(r.getDate()+days); return r; }
-    function formatDate(d){ return d.toLocaleDateString(); }
+    const daysContainer = document.getElementById("days");
+    const dayInfo = document.getElementById("dayInfo");
 
-    document.getElementById('periodForm').addEventListener('submit', (e)=>{
-      e.preventDefault();
-      const lp = document.getElementById('lastPeriod').value;
-      const cycle = parseInt(document.getElementById('cycleLength').value,10);
-      if (!lp || !cycle) return;
-      const last = new Date(lp);
-      const next = addDays(last, cycle);
-      // Fertile window approx: day 10-16 from period start for approx 28-day cycle
-      const fertileStart = addDays(last, Math.max(8, Math.round(cycle/2)-3));
-      const fertileEnd = addDays(last, Math.max(12, Math.round(cycle/2)+3));
+    const cycleLength = 28;
+    const periodLength = 5;
+    const today = 12; // assume today is day 12
+    const fertileStart = 10, fertileEnd = 16;
 
-      document.getElementById('nextPeriodText').innerHTML = `<strong>Next period:</strong> ${formatDate(next)}`;
-      document.getElementById('fertileWindowText').innerHTML = `<strong>Estimated fertile window:</strong> ${formatDate(fertileStart)} — ${formatDate(fertileEnd)} (approx.)`;
+    // Render calendar (1–31)
+    for (let i = 1; i <= 31; i++) {
+      const div = document.createElement("div");
+      div.classList.add("day");
+      div.innerText = i;
 
-      // preview next 35 days
-      const cal = document.getElementById('calendarPreview'); cal.innerHTML='';
-      const start = new Date();
-      for(let i=0;i<35;i++){
-        const d = addDays(start, i);
-        const el = document.createElement('div');
-        el.className='mini-day';
-        if (d.toDateString() === next.toDateString()) el.classList.add('period');
-        if (d >= fertileStart && d <= fertileEnd) el.classList.add('fertile');
-        el.textContent = d.getDate();
-        cal.appendChild(el);
-      }
-      document.getElementById('resultsPanel').style.display='block';
-      // === START: GitHub API Integration Placeholder ===
-      // Replace with your GitHub API endpoint when ready
-      /*
-      fetch('https://your-github-username.github.io/period-tracker-api/data.json')
-        .then(res => res.json())
-        .then(apiData => {
-          console.log("GitHub API Data:", apiData);
-          // Example: display API data alongside calculated results
-          document.getElementById('resultsPanel').insertAdjacentHTML('beforeend', `
-            <p class="muted"><strong>API Notes:</strong> ${apiData.message}</p>
-          `);
-        })
-        .catch(err => console.error('API fetch error:', err));
-      */
-      // === END: GitHub API Integration Placeholder ===
+      if (i === today) div.classList.add("today");
+      if (i >= 1 && i <= periodLength) div.classList.add("period");
+      if (i >= fertileStart && i <= fertileEnd) div.classList.add("fertile");
+
+      daysContainer.appendChild(div);
+    }
+
+    // Update statistics
+    let cycleProgress = Math.round((today / cycleLength) * 100);
+    dayInfo.innerText = `Day ${today} of your cycle`;
+
+    // Progress chart (Circular)
+    const ctxProgress = document.getElementById('progressChart');
+    new Chart(ctxProgress, {
+      type: 'doughnut',
+      data: {
+        datasets: [{
+          data: [cycleProgress, 100 - cycleProgress],
+          backgroundColor: ['#ff4da6','#eee'],
+          borderWidth: 0
+        }]
+      },
+      options: {
+        cutout: '70%',
+        plugins: {
+          legend: { display: false },
+          tooltip: { enabled: false }
+        }
+      },
+      plugins: [{
+        id: 'centerText',
+        beforeDraw: (chart) => {
+          const { ctx, chartArea: { width, height } } = chart;
+          ctx.save();
+          ctx.font = "bold 18px Inter";
+          ctx.fillStyle = "#333";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(cycleProgress + "%", width/2, height/2);
+        }
+      }]
     });
-    document.getElementById('clearBtn').addEventListener('click', ()=>{
-      document.getElementById('lastPeriod').value = '';
-      document.getElementById('cycleLength').value = 28;
-      document.getElementById('resultsPanel').style.display = 'none';
+
+    // Mood Chart (bar chart)
+    const ctx1 = document.getElementById('moodChart');
+    new Chart(ctx1, {
+      type: 'bar',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'Mood Score',
+          data: [3,4,2,5,4,3,2],
+          backgroundColor: '#ff80bf'
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, max: 5 } }
+      }
+    });
+
+    // Symptom Chart (line chart)
+    const ctx2 = document.getElementById('symptomChart');
+    new Chart(ctx2, {
+      type: 'line',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'Cramps Severity',
+          data: [2,3,4,3,2,1,0],
+          borderColor: '#8000ff',
+          backgroundColor: '#d9b3ff',
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: true, max: 5 } }
+      }
     });
   </script>
 </body>
