@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>HealthCare — Dashboard</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style2.css" />
 </head>
+
 <body>
   <!-- Auth Modal (signup/login) -->
   <div id="authModal" class="auth-modal">
@@ -49,14 +51,16 @@
           <p class="muted">Your personal health companion</p>
         </div>
         <div class="auth-illustration">
-          <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='180'><rect width='100%' height='100%' fill='%23e9fbfa'/><g fill='%23566f6c'><circle cx='60' cy='60' r='20'/><rect x='100' y='40' width='120' height='60' rx='12'/></g></svg>" alt="ill" />
+          <img
+            src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='300' height='180'><rect width='100%' height='100%' fill='%23e9fbfa'/><g fill='%23566f6c'><circle cx='60' cy='60' r='20'/><rect x='100' y='40' width='120' height='60' rx='12'/></g></svg>"
+            alt="ill" />
         </div>
       </div>
     </div>
   </div>
 
   <!-- Dashboard -->
-  <header class="topbar">
+  <!-- <header class="topbar">
     <div class="container topbar-inner">
       <div>
         <h1 class="title">JeevaCare</h1>
@@ -66,9 +70,25 @@
         <button id="openFeedback" class="btn btn-ghost">Feedback</button>
       </div>
     </div>
+  </header> -->
+  <header class="navbar">
+    <div class="container nav-container">
+      <img src="../../chatbot/Hello/images/logo.png" alt="" style="height: 50px;">
+      <!-- <div class="logo">JeevaCare</div> -->
+      <nav>
+        <ul class="nav-links">
+          <li><a href="#">Home</a></li>
+          <li><a href="#">Services</a></li>
+          <li><a href="#">About</a></li>
+          <li><a href="#">Contact</a></li>
+          <li><a class="login-btn" href="#">Login</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <main class="container main">
+
+  <main class="container main" style="padding-top: 150px;">
     <section class="panel welcome">
       <div>
         <h2>Welcome to your health dashboard</h2>
@@ -78,6 +98,21 @@
         <div id="userInfo" class="profile-name muted">Not signed in</div>
       </div>
     </section>
+
+    <!-- Doctor Consultation -->
+    <section class="card-grid">
+      <div class="feature-card" id="doctorCard" onclick="toggleBooking()">
+        <div class="icon">🩺</div>
+        <h3>Doctor Consultation</h3>
+        <p class="muted">Book a quick tele-consultation with a doctor.</p>
+        <div class="cta">Book Now</div>
+      </div>
+    </section>
+
+    <!-- Calendly inline widget (initially hidden) -->
+    <div class="calendly-inline-widget" id="calendlyWidget" data-url="https://calendly.com/sshibam2004/doctor-consultation"
+      style="min-width:320px;height:700px;display:none;">
+    </div>
 
     <section class="card-grid">
       <a class="feature-card" href="chatbot.html">
@@ -121,17 +156,18 @@
   <a class="sos-btn" href="#" id="sosBtn" title="Emergency SOS">SOS</a>
 
   <script src="script.js"></script>
+  <script type="text/javascript" src="https://assets.calendly.com/assets/external/widget.js" async></script>
   <script>
     // Auth form handling (simple demo)
     let isLoginMode = false;
-    function switchToLogin(){
+    function switchToLogin() {
       isLoginMode = true;
       document.getElementById('authTitle').textContent = 'Login';
       document.getElementById('submitBtn').textContent = 'Login';
       document.querySelector('#gender').parentElement.style.display = 'none';
       document.getElementById('name').required = false;
     }
-    document.getElementById('authForm').addEventListener('submit', function(e){
+    document.getElementById('authForm').addEventListener('submit', function (e) {
       e.preventDefault();
       const name = document.getElementById('name').value || 'User';
       const email = document.getElementById('email').value;
@@ -148,7 +184,7 @@
     // Show signup modal by default
     document.addEventListener('DOMContentLoaded', () => {
       const stored = localStorage.getItem('hc_user');
-      if (stored){
+      if (stored) {
         const u = JSON.parse(stored);
         document.getElementById('userInfo').textContent = `Welcome, ${u.name}`;
         document.getElementById('authModal').style.display = 'none';
@@ -162,6 +198,18 @@
     document.getElementById('openFeedback').addEventListener('click', () => {
       window.location.href = 'feedback.html';
     });
+
+    // Toggle doctor consultation booking
+    function toggleBooking() {
+      const widget = document.getElementById('calendlyWidget');
+      if (widget.style.display === 'none' || widget.style.display === '') {
+        widget.style.display = 'block';
+        widget.scrollIntoView({ behavior: 'smooth' });
+      } else {
+        widget.style.display = 'none';
+      }
+    }
   </script>
 </body>
+
 </html>
