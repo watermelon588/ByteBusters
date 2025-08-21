@@ -159,6 +159,31 @@ body {
   color: white;
 }
 
+.card-container {
+  display: flex;
+  gap: 2rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin: auto;
+
+  
+}
+.card{
+  flex: 1;
+  min-width: 260px;
+  max-width: 350px;
+  background-color: white;
+  padding: 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+}
+
+
 /* About Section */
 .about {
   padding: 4rem 1rem;
@@ -192,16 +217,16 @@ body {
 
 .about-text li {
   margin-bottom: 0.6rem;
-  position: relative;
+  /* position: relative; */
   padding-left: 1.25rem;
 }
 
-.about-text li::before {
+/* .about-text li::before {
   content: "✔";
   color: #2dd4bf;
   position: absolute;
   left: 0;
-}
+} */
 
 /* Services */
 .services {
@@ -239,11 +264,12 @@ body {
   box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
 }
 
-.service-card .icon {
-  font-size: 45px;   /* Bigger icons */
+/* .service-card .icon {
+  font-size: 45px;   
   line-height: 1;
   margin-bottom: 1rem;
-}
+} */
+
 
 /* Footer */
 footer {
