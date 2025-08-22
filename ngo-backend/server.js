@@ -10,7 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 // MongoDB connection
-mongoose.connect("mongodb://localhost:27017/ngoDB", {
+mongoose.connect("mongodb+srv://rohitzaxx:Clumsy004@cluster0.gd7p4ny.mongodb.net/", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -28,7 +28,7 @@ app.get("/", (req, res) => {
 const authRoutes = require("./routes/auth");
 
 // Use Routes
-app.use("/api/auth", authRoutes);
+app.use("/auth", authRoutes);
 
 // Start server
 const PORT = 5000;
